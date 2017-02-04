@@ -7,6 +7,4 @@ import com.mczal.nb.model.BayesianModel;
  */
 public interface BayesianModelService extends CRUDService<BayesianModel> {
 
-
-
 }
