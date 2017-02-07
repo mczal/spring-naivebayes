@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<div class="content-header" th:fragment="flash">
+    <p class="alert alert-success" th:if="${success != null}" th:text="${success}"></p>
+    <p class="alert alert-danger" th:if="${danger != null}" th:text="${danger}"></p>
+    <p class="alert alert-warning" th:if="${warning != null}" th:text="${warning}"></p>
+    <p class="alert alert-info" th:if="${info != null}" th:text="${info}"></p>
+</div>
+</body>
+</html>

@@ -10,11 +10,10 @@ import java.util.Set;
  */
 public interface BayesianModelDao extends JpaRepository<BayesianModel, String> {
 
-  Set<BayesianModel> findByClassName(String className);
-
-  Set<BayesianModel> findByClassNameAndPredictorName(String className,
-      String predictorName);
-
-  Set<BayesianModel> findByPredictorName(String predictorName);
+//  Set<BayesianModel> findByClassName(String className);
+//
+//  Set<BayesianModel> findByClassNameAndPredictorName(String className, String predictorName);
+//
+//  Set<BayesianModel> findByPredictorName(String predictorName);
 
 }

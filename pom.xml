@@ -28,6 +28,9 @@
         <bootstrap.version>3.3.7</bootstrap.version>
         <jquery.version>3.1.1</jquery.version>
         <font-awesome.version>4.7.0</font-awesome.version>
+
+        <commons-fileupload.version>1.3.2</commons-fileupload.version>
+        <commons-io.version>2.5</commons-io.version>
     </properties>
 
     <dependencyManagement>
@@ -49,6 +52,20 @@
                 <artifactId>font-awesome</artifactId>
                 <version>${font-awesome.version}</version>
             </dependency>
+
+            <!-- Apache Commons Upload -->
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>${commons-fileupload.version}</version>
+            </dependency>
+            <!-- Apache Commons Upload -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -82,12 +99,43 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
+            <!--<scope>provided</scope>-->
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>javax.servlet</groupId>-->
+            <!--<artifactId>javax.servlet-api</artifactId>-->
+            <!--&lt;!&ndash;<version>3.0.1</version>&ndash;&gt;-->
+            <!--<scope>provided</scope>-->
+        <!--</dependency>-->
+
+        <!-- Data Sources -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- SHOULD BE REMOVED ? -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
+
+        <!-- TEST Purposes -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!-- UTILS -->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
         </dependency>
 
         <!--WebJars-->
