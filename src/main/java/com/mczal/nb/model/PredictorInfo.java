@@ -1,5 +1,7 @@
 package com.mczal.nb.model;
 
+import com.mczal.nb.model.util.Type;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -9,6 +11,7 @@ import java.util.Set;
  * Created by Gl552 on 1/22/2017.
  */
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = "predictorName")})
 public class PredictorInfo implements Serializable {
   private static final long serialVersionUID = 3941627791928304053L;
 
@@ -19,10 +22,14 @@ public class PredictorInfo implements Serializable {
   @OneToMany(cascade = CascadeType.ALL,
       fetch = FetchType.EAGER,
       mappedBy = "predictorInfo")
-  private Set<PredictorInfoDetail> predictorInfoDetails = new HashSet<>();
+  private Set<PredictorInfoDetail> predictorInfoDetails = new HashSet<PredictorInfoDetail>();
+
+  @Column(name = "predictorName")
+  private String predictorName;
 
   @Column
-  private String predictorName;
+  @Enumerated(EnumType.STRING)
+  private Type type;
 
   public Integer getId() {
     return id;
@@ -46,5 +53,13 @@ public class PredictorInfo implements Serializable {
 
   public void setPredictorName(String predictorName) {
     this.predictorName = predictorName;
+  }
+
+  public Type getType() {
+    return type;
+  }
+
+  public void setType(Type type) {
+    this.type = type;
   }
 }

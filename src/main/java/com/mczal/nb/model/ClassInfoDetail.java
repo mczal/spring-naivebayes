@@ -11,12 +11,16 @@ public class ClassInfoDetail implements Serializable {
 
   private static final long serialVersionUID = 6334593415054392713L;
 
+  //  @ManyToOne
+  //  @JoinColumn(name = "bayesianModelId")
+  //  private BayesianModel bayesianModel;
+
   @ManyToOne
   @JoinColumn(name = "classInfoId")
   private ClassInfo classInfo;
 
   @Column
-  private Integer count;
+  private Integer count = 0;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
