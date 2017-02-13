@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <title>Title</title>
+    <link th:src="'https://cdn.jsdelivr.net/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js'"/>
+</head>
+<body>
+<h2 th:fragment="header">
+    Error Rate
+</h2>
+<section th:fragment="content" class="content">
+    <div class="row">
+        <div class="col-sm-offset-1 col-sm-10">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>True Positive</th>
+                    <th>True Negative</th>
+                    <th>False Positive</th>
+                    <th>False Negative</th>
+                </tr>
+                </thead>
+                <tbody>
+                <div th:each="errorRate : ${errorRates}">
+                    <tr>
+                        <td th:text="${errorRate.type}"></td>
+                        <td th:text="${errorRate.truePositive}"></td>
+                        <td th:text="${errorRate.trueNegative}"></td>
+                        <td th:text="${errorRate.falsePositive}"></td>
+                        <td th:text="${errorRate.falseNegative}"></td>
+                    </tr>
+                    <!--<tr th:if="${#strings.contains(errorRate.type,'LAST')}">-->
+                    <!---->
+                    <!--</tr>-->
+                    <!--<tr th:if="${#strings.contains(errorRate.type,'ACCUMULATIVE')}">-->
+
+                    <!--</tr>-->
+                </div>
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+</section>
+</body>
+</html>

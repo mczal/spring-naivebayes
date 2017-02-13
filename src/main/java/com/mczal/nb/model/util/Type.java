@@ -5,5 +5,6 @@ package com.mczal.nb.model.util;
  */
 public enum Type {
   DISCRETE,
-  NUMERIC
+  NUMERIC,
+  CLASS
 }

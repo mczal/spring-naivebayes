@@ -7,7 +7,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication
-@PropertySource("file:${NAIVE_CONF_DIR}/application.properties")
+//@PropertySource("file:${NAIVE_CONF_DIR}/application.properties")
 //@PropertySource(value = "classpath:${NAIVE_CONF_DIR}/application.properties")
 //@PropertySource(value = "classpath*:application.properties")
 public class SpringNaivebayesApplication extends SpringBootServletInitializer {

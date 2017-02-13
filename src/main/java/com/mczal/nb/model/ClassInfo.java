@@ -9,6 +9,7 @@ import java.util.Set;
  * Created by Gl552 on 1/22/2017.
  */
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = "className")})
 public class ClassInfo implements Serializable {
 
   private static final long serialVersionUID = 7690173919728795609L;
@@ -18,7 +19,7 @@ public class ClassInfo implements Serializable {
       mappedBy = "classInfo")
   private Set<ClassInfoDetail> classInfoDetails = new HashSet<>();
 
-  @Column
+  @Column(name = "className")
   private String className;
 
   @Id
@@ -48,5 +49,4 @@ public class ClassInfo implements Serializable {
   public void setId(Integer id) {
     this.id = id;
   }
-
 }

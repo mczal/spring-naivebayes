@@ -1,7 +1,6 @@
 package com.mczal.nb.model;
 
 import com.mczal.nb.model.util.Type;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,10 +14,6 @@ public class BayesianModel implements Serializable {
 
   private static final long serialVersionUID = 918981889757624891L;
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Integer id;
-
   @Column
   private String className;
 
@@ -27,6 +22,10 @@ public class BayesianModel implements Serializable {
 
   @Column
   private Integer count;
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Integer id;
 
   @Column
   private BigDecimal mean;
@@ -92,12 +91,12 @@ public class BayesianModel implements Serializable {
     this.predVal = predVal;
   }
 
-  public String getPredictor() {
+  public String getPredictorName() {
     return predictorName;
   }
 
-  public void setPredictor(String predictor) {
-    this.predictorName = predictor;
+  public void setPredictorName(String predictorName) {
+    this.predictorName = predictorName;
   }
 
   public BigDecimal getSigma() {
@@ -114,5 +113,12 @@ public class BayesianModel implements Serializable {
 
   public void setType(Type type) {
     this.type = type;
+  }
+
+  @Override
+  public String toString() {
+    return "BayesianModel{" + "className='" + className + '\'' + ", classVal='" + classVal + '\''
+        + ", count=" + count + ", id=" + id + ", mean=" + mean + ", predVal='" + predVal + '\''
+        + ", predictorName='" + predictorName + '\'' + ", sigma=" + sigma + ", type=" + type + '}';
   }
 }

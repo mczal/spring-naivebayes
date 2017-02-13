@@ -11,16 +11,22 @@ public class ClassInfoDetail implements Serializable {
 
   private static final long serialVersionUID = 6334593415054392713L;
 
+  //  @ManyToOne
+  //  @JoinColumn(name = "bayesianModelId")
+  //  private BayesianModel bayesianModel;
+
   @ManyToOne
   @JoinColumn(name = "classInfoId")
   private ClassInfo classInfo;
 
   @Column
-  private Integer count;
+  private Integer count = 0;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
+
+  private Boolean selected = false;
 
   @Column
   private String value;
@@ -47,6 +53,14 @@ public class ClassInfoDetail implements Serializable {
 
   public void setId(Integer id) {
     this.id = id;
+  }
+
+  public Boolean getSelected() {
+    return selected;
+  }
+
+  public void setSelected(Boolean selected) {
+    this.selected = selected;
   }
 
   public String getValue() {
