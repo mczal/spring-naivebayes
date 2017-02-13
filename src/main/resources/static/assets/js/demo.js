@@ -214,7 +214,7 @@
                 $('.main-stylesheet').attr('href', 'pages/css/pages.rtl.css');
             } else {
                 $('body').removeClass('rtl')
-                $('.main-stylesheet').attr('href', 'pages/css/pages.css');
+                $('.main-stylesheet').attr('href', 'pages/css/pagesz.css');
 
             }
         };

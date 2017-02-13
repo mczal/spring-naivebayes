@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<h2 th:fragment="header">
+    Train NBC Model
+</h2>
+<div class="content" th:fragment="content">
+    <div class="container">
+        <!--Singleton Query Or Upload File With Format ???-->
+        <!--renew-model-local-->
+        <div class="row">
+            <div class="col-sm-5 col-md-5 col-lg-5">
+                <h4>Singleton Query</h4>
+                <hr/>
+                <form id="singletonForm" class="form-horizontal" th:object="${singleton}"
+                      method="post"
+                      th:action="@{/admin/train/singleton}">
+
+                    <h5>Predictors</h5>
+                    <div class="row" th:each="predictor : ${predictors}">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"
+                                   th:text="${predictor.predictorName}"></label>
+                            <div class="col-sm-6">
+                                <select required="required"
+                                        th:if="${#strings.contains(predictor.type,'DISCRETE')}"
+                                        class="form-control" th:field="*{predictorInfos}">
+                                    <option th:each="predictorInfoDetail : ${predictor.predictorInfoDetails}"
+                                            th:text="${predictorInfoDetail.value}"
+                                            th:value="${predictor.type}+'|'+${predictor.predictorName}+'|'+${predictorInfoDetail.value}"></option>
+                                </select>
+                                <input required="required"
+                                       th:class="'numericSingletonIn form-control'"
+                                       th:placeholder="${predictor.predictorName}"
+                                       th:if="${#strings.contains(predictor.type,'NUMERIC')}"
+                                       type="text" th:field="*{predictorInfos}"/>
+                                <!--<input type="text" class="form-control" th:field="*{shippingCode}"/>-->
+                                <!--<span class="form-control" disabled="disabled"-->
+                                <!--th:text="${user.username} + ' / ' + ${user.email}"-->
+                                <!--style="text-align:center;"/>-->
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5>Classes</h5>
+                    <div class="row" th:each="classz : ${classes}">
+                        <div class="form-group">
+                            <!--th:class="${#fields.hasErrors('shippingCode')} ? 'form-group has-error' : 'form-group'"-->
+                            <label class="col-sm-2 control-label"
+                                   th:text="${classz.className}"></label>
+                            <div class="col-sm-6">
+                                <select class="form-control" th:field="*{classInfos}">
+                                    <option th:each="classInfoDetail : ${classz.classInfoDetails}"
+                                            th:text="${classInfoDetail.value}"
+                                            th:value="${classz.className}+'|'+${classInfoDetail.value}"></option>
+                                </select>
+                                <!--<input type="text" class="form-control" th:field="*{shippingCode}"/>-->
+                                <!--<span class="form-control" disabled="disabled"-->
+                                <!--th:text="${user.username} + ' / ' + ${user.email}"-->
+                                <!--style="text-align:center;"/>-->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-3">
+                                <button type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-5 col-lg-offset-1 col-lg-5">
+                <h4>Training Files</h4>
+                <hr/>
+
+                <form class="form-horizontal" th:object="${trainFile}" method="post"
+                      th:action="@{/admin/train/files}" enctype="multipart/form-data">
+
+                    <div class="form-group">
+                        <!--th:class="${#fields.hasErrors('files')} ? 'form-group has-error' : 'form-group'"-->
+                        <label class="col-sm-3 control-label">Training File:</label>
+                        <div class="col-sm-9">
+                            <input type="file" class="form-control" th:field="*{files}"/>
+                        </div>
+                    </div>
+                    <!--</div>-->
+
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-sm-3 col-sm-offset-4">
+                                <button type="submit" class="btn btn-success">Submit
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" th:fragment="custom_javascript">
+    /*<![CDATA[*/
+    window.onload = function () {
+        document.getElementById('singletonForm').onsubmit = function (e) {
+            e.preventDefault();
+            var numszz = document.getElementsByClassName('numericSingletonIn');
+            console.log("NUMZ", numszz);
+            for (var indeks = 0; indeks < numszz.length; indeks++) {
+                var numOne = numszz.item(indeks);
+                console.log("numOne", numOne);
+                var placehold = numOne.getAttribute('placeholder');
+                console.log("placehold", placehold);
+                numOne.value = 'NUMERIC|' + placehold + '|' + numOne.value;
+                console.log("numOne Updated", numOne);
+                console.log("numOne Updated Value", numOne.value);
+            }
+            this.submit();
+        };
+    };
+    /*]]>*/
+</script>
+</body>
+</html>

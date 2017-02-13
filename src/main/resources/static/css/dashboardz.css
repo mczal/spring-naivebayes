@@ -1,0 +1,33 @@
+/**
+ * Created by Gl552 on 2/11/2017.
+ */
+
+/*.floatingHeader {*/
+    /*position: fixed;*/
+    /*top: 60px;*/
+    /*visibility: hidden;*/
+/*}*/
+
+.hiddenRow {
+    padding: 0 !important;
+}
+
+.table td {
+    text-align: center;
+}
+
+.table tr:hover td{
+    background-color:whitesmoke;
+    cursor: pointer;
+    cursor: hand;
+}
+
+.table th {
+    text-align: center;
+}
+
+#header-fixed {
+    position: fixed;
+    top: 0px; display:none;
+    background-color:white;
+}

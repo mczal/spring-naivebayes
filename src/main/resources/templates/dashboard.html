@@ -3,13 +3,228 @@
 <head>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
     <title>Title</title>
+    <link th:src="'https://cdn.jsdelivr.net/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js'"/>
 </head>
 <body>
 <h2 th:fragment="header">
     Dashboard
 </h2>
 <div class="content" th:fragment="content">
-    This is dashboard content
+    <!--This is dashboard content-->
+
+    <div class="row">
+        <div class="col-sm-3 col-md-3 col-lg-3">
+            <h3 class="text-center">Class Info</h3>
+            <table class="table table-condensed table-bordered">
+                <thead>
+                <tr>
+                    <th width="15%">Id</th>
+                    <th width="85%">Class Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                <div th:each="classz : ${classes}">
+                    <tr data-toggle="collapse" th:attr="data-target='#_C'+${classz.id}"
+                        class="accordion-toggle">
+                        <td width="10%" th:text="${classz.id}">[Id]</td>
+                        <td width="90%" th:text="${classz.className}">[Class Name]</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="hiddenRow">
+                            <div style="background: whitesmoke;" th:id="'_C'+${classz.id}"
+                                 class="accordian-body collapse">
+                                <table style="background: whitesmoke;"
+                                       class="table table-condensed table-hover">
+                                    <thead style="background: white;">
+                                    <tr>
+                                        <th>Count</th>
+                                        <th>Value</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody style="background: whitesmoke;">
+                                    <tr th:each="classInfoDetail : ${classz.classInfoDetails}">
+                                        <td style="background: antiquewhite;"
+                                            th:text="${classInfoDetail.count}">[Count]
+                                        </td>
+                                        <td style="background: antiquewhite;"
+                                            th:text="${classInfoDetail.value}">[Value]
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </div>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-sm-offset-1 col-sm-8 col-md-offset-1 col-md-8 col-lg-offset-1 col-lg-8">
+            <h3 class="text-center">Predictor Info</h3>
+            <table class="table table-condensed table-bordered">
+                <thead>
+                <tr>
+                    <th width="10%">Id</th>
+                    <th width="45%">Predictor Name</th>
+                    <th width="45%">Predictor Type</th>
+                </tr>
+                </thead>
+                <tbody>
+                <div th:each="predictor : ${predictors}">
+                    <tr data-toggle="collapse" th:attr="data-target='#_P'+${predictor.id}"
+                        class="accordion-toggle">
+                        <td width="10%" th:text="${predictor.id}">[Id]</td>
+                        <td width="45%" th:text="${predictor.predictorName}">[Name]</td>
+                        <td width="45%" th:text="${predictor.type}">[Type]</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="hiddenRow">
+                            <div style="background: whitesmoke;" th:id="'_P'+${predictor.id}"
+                                 class="accordian-body collapse">
+                                <table style="background: whitesmoke;"
+                                       class="table table-condensed table-hover">
+                                    <thead style="background: white;"
+                                           th:if="${#strings.contains(predictor.type,'DISCRETE')}">
+                                    <tr>
+                                        <th>Count</th>
+                                        <th>Value</th>
+                                    </tr>
+                                    </thead>
+                                    <thead style="background: white;"
+                                           th:if="${#strings.contains(predictor.type,'NUMERIC')}">
+                                    <th>Mean</th>
+                                    <th>Sigma</th>
+                                    <th>Class Prior Name</th>
+                                    <th>Class Prior Value</th>
+                                    </thead>
+                                    <tbody style="background: whitesmoke;">
+                                    <tr th:if="${#strings.contains(predictor.type,'DISCRETE')}"
+                                        th:each="predictorInfoDetail : ${predictor.predictorInfoDetails}">
+                                        <td style="background: antiquewhite;"
+                                            th:text="${predictorInfoDetail.count}">[Count]
+                                        </td>
+                                        <td style="background: antiquewhite;border-right: thin solid black;"
+                                            th:text="${predictorInfoDetail.value}">
+                                            [Value]
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#strings.contains(predictor.type,'NUMERIC')}"
+                                        th:each="predictorInfoDetail : ${predictor.predictorInfoDetails}">
+                                        <td style="background: antiquewhite;"
+                                            th:text="${predictorInfoDetail.mean}">[Mean]
+                                        </td>
+                                        <td style="background: antiquewhite;"
+                                            th:text="${predictorInfoDetail.sigma}">[Sigma]
+                                        </td>
+                                        <td style="background: antiquewhite;"
+                                            th:text="${predictorInfoDetail.classPriorName}">[Class
+                                            Prior Name]
+                                        </td>
+                                        <td style="background: antiquewhite;"
+                                            th:text="${predictorInfoDetail.classPriorValue}">[Class
+                                            Prior Value]
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <h3 class="text-center">Bayesian Model</h3>
+            <div class="row">
+                <span style="color: red">*</span>
+                <span>
+                    <small>P_N = Predictor Name</small>
+                </span>
+            </div>
+            <div class="row">
+                <span style="color: red">*</span>
+                <span>
+                    <small>P_V = Predictor Value</small>
+                </span>
+            </div>
+            <div class="row">
+                <span style="color: red">*</span>
+                <span>
+                    <small>C_N = Class Name</small>
+                </span>
+            </div>
+            <div class="row">
+                <span style="color: red">*</span>
+                <span>
+                    <small>C_V = Class Name</small>
+                </span>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <h4 class="text-center">Discrete</h4>
+                <table class="table table-condensed table-bordered persist-area">
+                    <thead>
+                    <tr class="persist-header">
+                        <th>Id</th>
+                        <th>p_n</th>
+                        <th>p_v</th>
+                        <th>c_n</th>
+                        <th>c_v</th>
+                        <th>count</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="disc : ${discreteModels}">
+                        <td th:text="${disc.id}">Id</td>
+                        <td th:text="${disc.predictorName}">p_n</td>
+                        <td th:text="${disc.predVal}">p_v</td>
+                        <td th:text="${disc.className}">c_n</td>
+                        <td th:text="${disc.classVal}">c_v</td>
+                        <td th:text="${disc.count}">count</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-5 col-lg-offset-1 col-lg-5">
+                <h4 class="text-center">Numeric</h4>
+                <table class="table table-condensed table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>p_n</th>
+                        <th>c_n</th>
+                        <th>c_v</th>
+                        <th>mean</th>
+                        <th>sigma</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="num : ${numericModels}">
+                        <td th:text="${num.id}">Id</td>
+                        <td th:text="${num.predictorName}">p_n</td>
+                        <td th:text="${num.className}">p_v</td>
+                        <td th:text="${num.classVal}">c_v</td>
+                        <td th:text="${num.mean}">mean</td>
+                        <td th:text="${num.sigma}">sigma</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--private String className-->
+            <!--private String classVal-->
+            <!--private Integer countprivate Integer id-->
+            <!--private BigDecimal mean-->
+            <!--private String predVal-->
+            <!--private String predictorName;-->
+            <!--private BigDecimal sigma;-->
+            <!--private Type type;-->
+        </div>
+    </div>
+
 </div>
 </body>
 </html>

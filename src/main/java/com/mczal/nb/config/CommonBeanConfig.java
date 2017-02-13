@@ -10,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
  */
 @Configuration
 @EnableJpaRepositories("com.mczal.nb.dao")
+@EnableAutoConfiguration
 public class CommonBeanConfig {
 
 }

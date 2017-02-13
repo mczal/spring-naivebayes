@@ -14,18 +14,8 @@ public class BayesianModel implements Serializable {
 
   private static final long serialVersionUID = 918981889757624891L;
 
-  //  @OneToMany(cascade = CascadeType.ALL,
-  //      fetch = FetchType.EAGER,
-  //      mappedBy = "bayesianModel")
-  //  private Set<ClassInfoDetail> classInfoDetail = new HashSet<ClassInfoDetail>();
-
   @Column
   private String className;
-
-  //  @OneToMany(cascade = CascadeType.ALL,
-  //      fetch = FetchType.EAGER,
-  //      mappedBy = "bayesianModel")
-  //  private Set<PredictorInfoDetail> predictorInfoDetail = new HashSet<PredictorInfoDetail>();
 
   @Column
   private String classVal;
@@ -123,5 +113,12 @@ public class BayesianModel implements Serializable {
 
   public void setType(Type type) {
     this.type = type;
+  }
+
+  @Override
+  public String toString() {
+    return "BayesianModel{" + "className='" + className + '\'' + ", classVal='" + classVal + '\''
+        + ", count=" + count + ", id=" + id + ", mean=" + mean + ", predVal='" + predVal + '\''
+        + ", predictorName='" + predictorName + '\'' + ", sigma=" + sigma + ", type=" + type + '}';
   }
 }

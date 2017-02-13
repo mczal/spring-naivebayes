@@ -49,5 +49,4 @@ public class ClassInfo implements Serializable {
   public void setId(Integer id) {
     this.id = id;
   }
-
 }
