@@ -9,6 +9,8 @@ public interface CRUDService<T> {
 
   void delete(String id) throws Exception;
 
+  void delete(Integer id) throws Exception;
+
   T findById(String id) throws Exception;
 
   List<T> listAll();

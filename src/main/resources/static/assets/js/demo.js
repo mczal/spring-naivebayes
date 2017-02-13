@@ -214,11 +214,19 @@
                 $('.main-stylesheet').attr('href', 'pages/css/pages.rtl.css');
             } else {
                 $('body').removeClass('rtl')
+<<<<<<< HEAD
                 $('.main-stylesheet').attr('href', 'pages/css/pages.css');
+=======
+                $('.main-stylesheet').attr('href', 'pages/css/pagesz.css');
+>>>>>>> master
 
             }
         };
     }
     // END BUILDER
 
+<<<<<<< HEAD
 })(window.jQuery);
+=======
+})(window.jQuery);
+>>>>>>> master

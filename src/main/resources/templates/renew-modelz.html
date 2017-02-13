@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<h2 th:fragment="header">
+    Renew Naive Bayes Classifier's Model
+</h2>
+<div class="content" th:fragment="content">
+    Upload file or just button that read from HDFS server
+    <!--renew-model-local-->
+    <form class="form-horizontal" method="post" th:object="${modelLocal}"
+          th:action="@{/admin/renew-model-local}" enctype="multipart/form-data">
+
+        <!--<div class="row">-->
+        <div class="form-group"
+             th:class="${#fields.hasErrors('files')} ? 'form-group has-error' : 'form-group'">
+            <label class="col-sm-2 control-label">Model File From HDFS:</label>
+            <div class="col-sm-6">
+                <input type="file" class="form-control" th:field="*{files}"/>
+                <span class="help-block">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('files')}"
+                            th:text="${err}"/>
+                    </ul>
+                </span>
+            </div>
+        </div>
+        <!--</div>-->
+
+        <div class="row">
+            <div class="form-group">
+                <div class="col-sm-3 col-sm-offset-4">
+                    <button type="submit" class="btn btn-outline-success">Submit</button>
+                </div>
+            </div>
+        </div>
+
+        <!--<div class="row">-->
+        <!--<div class="form-group"-->
+        <!--th:class="${#fields.hasErrors('user')} ? 'form-group has-error' : 'form-group'">-->
+        <!--<label class="col-sm-2 control-label">User:</label>-->
+        <!--<div class="col-sm-6">-->
+        <!--&lt;!&ndash;<input type="text" class="form-control" th:field="*{user.username}"/>&ndash;&gt;-->
+        <!--<span class="form-control" disabled="disabled"-->
+        <!--th:text="${user.username} + ' / ' + ${user.email}"-->
+        <!--style="text-align:center;"/>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+    </form>
+</div>
+</body>
+</html>

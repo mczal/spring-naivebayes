@@ -36,6 +36,8 @@ public class PredictorInfoDetail implements Serializable {
   @JoinColumn(name = "predictorInfoId")
   private PredictorInfo predictorInfo;
 
+  private Boolean selected = false;
+
   @Column
   private BigDecimal sigma;
 
@@ -88,6 +90,18 @@ public class PredictorInfoDetail implements Serializable {
 
   public void setPredictorInfo(PredictorInfo predictorInfo) {
     this.predictorInfo = predictorInfo;
+  }
+
+  public Boolean getSelected() {
+    return selected;
+  }
+
+  public void setSelected(Boolean selected) {
+    this.selected = selected;
+  }
+
+  public static long getSerialVersionUID() {
+    return serialVersionUID;
   }
 
   public BigDecimal getSigma() {
