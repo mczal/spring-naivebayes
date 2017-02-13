@@ -4,6 +4,7 @@ import com.mczal.nb.model.BayesianModel;
 import com.mczal.nb.model.util.Type;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -20,6 +21,6 @@ public interface BayesianModelService extends CRUDService<BayesianModel> {
   BayesianModel findByPredictorNameAndPredValAndClassNameAndClassVal(String predictorName,
       String predVal, String className, String classVal);
 
-  void insertNewModel(BufferedReader br);
+  void insertNewModel(BufferedReader br) throws IOException;
 
 }

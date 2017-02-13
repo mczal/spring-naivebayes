@@ -114,9 +114,13 @@ public class TrainingController {
          * */
 
         for (String s : singletonQuery.getPredictorInfos()) {
+          s = s.trim();
           switch (s.split("\\|")[0].trim()) {
             case "DISCRETE":
               Pair<Double, Double> pairRes = trainUtils.calcDiscrete(classInfo, classInfoDetail, s);
+//              if (pairRes == null) {
+//                continue;
+//              }
               double dividend = pairRes.getFirst();
               double divisor = pairRes.getSecond();
               currPredRes *= (dividend) / (divisor);

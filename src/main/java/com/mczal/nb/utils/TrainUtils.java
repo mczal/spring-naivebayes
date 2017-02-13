@@ -30,16 +30,16 @@ public class TrainUtils {
       String s) {
     logger.info("\nMCZAL: singletonQuey => " + s);
     logger.info("\nMczal: method => " + "findByPredictorNameAndPredValAndClassNameAndClassVal(" + s
-        .split("\\|")[1] + ", " + s.split("\\|")[2] + ", " + classInfo.getClassName() + ", "
-        + classInfoDetail.getValue() + ")" + "\n");
+        .split("\\|")[1].trim() + ", " + s.split("\\|")[2].trim() + ", " + classInfo.getClassName()
+        + ", " + classInfoDetail.getValue() + ")" + "\n");
     BayesianModel bayesianModelDividend = bayesianModelService
-        .findByPredictorNameAndPredValAndClassNameAndClassVal(s.split("\\|")[1], s.split("\\|")[2],
-            classInfo.getClassName(), classInfoDetail.getValue());
+        .findByPredictorNameAndPredValAndClassNameAndClassVal(s.split("\\|")[1].trim(),
+            s.split("\\|")[2].trim(), classInfo.getClassName(), classInfoDetail.getValue());
     if (bayesianModelDividend == null) {
       logger.info("\n\n GAGILS => Mczal: method => "
-          + "findByPredictorNameAndPredValAndClassNameAndClassVal(" + s.split("\\|")[1] + ", " + s
-          .split("\\|")[2] + ", " + classInfo.getClassName() + ", " + classInfoDetail.getValue()
-          + ")" + "\n\n\n");
+          + "findByPredictorNameAndPredValAndClassNameAndClassVal(" + s.split("\\|")[1].trim()
+          + ", " + s.split("\\|")[2].trim() + ", " + classInfo.getClassName() + ", "
+          + classInfoDetail.getValue() + ")" + "\n\n\n");
       return null;
     }
     Set<BayesianModel> bayesianModelsDivisor = bayesianModelService

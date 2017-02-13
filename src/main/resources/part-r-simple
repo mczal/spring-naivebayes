@@ -6,7 +6,6 @@ Humidity,High,Play,No,4.0|DISCRETE
 Humidity,High,Play,Yes,3.0|DISCRETE
 Humidity,Normal,Play,No,1.0|DISCRETE
 Humidity,Normal,Play,Yes,6.0|DISCRETE
-Outlook,Overcast,Play,Yes,4.0|DISCRETE
 Outlook,Rainy,Play,No,3.0|DISCRETE
 Outlook,Rainy,Play,Yes,2.0|DISCRETE
 Outlook,Sunny,Play,No,2.0|DISCRETE
