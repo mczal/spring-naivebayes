@@ -1,49 +1,120 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
-    <title>Title</title>
-    <link th:src="'https://cdn.jsdelivr.net/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js'"/>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+  <title>Title</title>
+  <link th:src="'https://cdn.jsdelivr.net/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js'"/>
 </head>
 <body>
 <h2 th:fragment="header">
-    Error Rate
+  Error Rate
 </h2>
 <section th:fragment="content" class="content">
-    <div class="row">
-        <div class="col-sm-offset-1 col-sm-10">
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th></th>
-                    <th>True Positive</th>
-                    <th>True Negative</th>
-                    <th>False Positive</th>
-                    <th>False Negative</th>
-                </tr>
-                </thead>
-                <tbody>
-                <div th:each="errorRate : ${errorRates}">
-                    <tr>
-                        <td th:text="${errorRate.type}"></td>
-                        <td th:text="${errorRate.truePositive}"></td>
-                        <td th:text="${errorRate.trueNegative}"></td>
-                        <td th:text="${errorRate.falsePositive}"></td>
-                        <td th:text="${errorRate.falseNegative}"></td>
-                    </tr>
-                    <!--<tr th:if="${#strings.contains(errorRate.type,'LAST')}">-->
-                    <!---->
-                    <!--</tr>-->
-                    <!--<tr th:if="${#strings.contains(errorRate.type,'ACCUMULATIVE')}">-->
+  <div class="row">
+    <div class="col-sm-offset-1 col-sm-10">
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th></th>
+          <th>True Positive</th>
+          <th>True Negative</th>
+          <th>False Positive</th>
+          <th>False Negative</th>
+        </tr>
+        </thead>
+        <tbody>
+        <div th:each="errorRate : ${errorRates}">
+          <tr>
+            <td th:text="${errorRate.type}"></td>
+            <td th:text="${errorRate.truePositive}"></td>
+            <td th:text="${errorRate.trueNegative}"></td>
+            <td th:text="${errorRate.falsePositive}"></td>
+            <td th:text="${errorRate.falseNegative}"></td>
+          </tr>
+          <!--<tr th:if="${#strings.contains(errorRate.type,'LAST')}">-->
+          <!---->
+          <!--</tr>-->
+          <!--<tr th:if="${#strings.contains(errorRate.type,'ACCUMULATIVE')}">-->
 
-                    <!--</tr>-->
-                </div>
-                </tbody>
-            </table>
-
-
+          <!--</tr>-->
         </div>
+        </tbody>
+      </table>
+
     </div>
+  </div>
+  <hr/>
+
+  <div class="row">
+    <span style="color: red">*</span>
+    <span>
+            <small>tp = True Positive</small>
+        </span>
+  </div>
+  <div class="row">
+    <span style="color: red">*</span>
+    <span>
+            <small>tn = True Negative</small>
+        </span>
+  </div>
+  <div class="row">
+    <span style="color: red">*</span>
+    <span>
+            <small>fp = False Positive</small>
+        </span>
+  </div>
+  <div class="row">
+    <span style="color: red">*</span>
+    <span>
+            <small>fn = False Negative</small>
+        </span>
+  </div>
+  <!--Accuracy-->
+  <div class="row">
+    <div class="col-sm-offset-1 col-sm-10">
+      <h3>Accuracy</h3>
+      <small>$$Accuracy = {tp + tn \over tp+tn+fn+fp}.$$</small>
+    </div>
+  </div>
+  <hr/>
+
+  <!--Recall-->
+  <div class="row">
+    <div class="col-sm-offset-1 col-sm-10">
+      <h3>Recall</h3>
+      <small>$$R = {tp \over tp + fn}.$$</small>
+    </div>
+  </div>
+  <hr/>
+
+  <!--Precision-->
+  <div class="row">
+    <div class="col-sm-offset-1 col-sm-10">
+      <h3>Precision</h3>
+      <small>$$P = {tp \over tp + fp}.$$</small>
+    </div>
+  </div>
+  <hr/>
+
+  <!--F measure-->
+  <div class="row">
+    <div class="col-sm-offset-1 col-sm-10">
+      <h3>F Measure</h3>
+      <div class="row">
+        <span>
+            <small>$$ \alpha = {coefficient} $$</small>
+        </span>
+      </div>
+      <div class="row">
+        <span>
+            <small>$$ \alpha = {2PR \over P + R} .$$</small>
+        </span>
+      </div>
+      <small>$$F = {1 \over {\alpha{1 \over P}+(1-\alpha) {1 \over R} }}.$$</small>
+    </div>
+  </div>
+  <hr/>
+
 </section>
 </body>
 </html>
