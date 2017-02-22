@@ -4,9 +4,12 @@ import com.mczal.nb.dto.SingletonQuery;
 import com.mczal.nb.dto.TrainFile;
 import com.mczal.nb.model.ClassInfo;
 import com.mczal.nb.model.ClassInfoDetail;
+import com.mczal.nb.model.ErrorRate;
 import com.mczal.nb.model.PredictorInfo;
+import com.mczal.nb.model.util.ErrorType;
 import com.mczal.nb.service.BayesianModelService;
 import com.mczal.nb.service.ClassInfoService;
+import com.mczal.nb.service.ErrorRateService;
 import com.mczal.nb.service.PredictorInfoService;
 import com.mczal.nb.utils.TrainUtils;
 import org.slf4j.Logger;
@@ -32,7 +35,7 @@ import java.util.List;
 @RequestMapping(TrainingController.ABSOLTE_PATH)
 public class TrainingController {
 
-  public static final String ABSOLTE_PATH = "/admin/train";
+  public static final String ABSOLTE_PATH = "/admin/testing";
 
   private static final String LAYOUTS_ADMIN = "layouts/admin";
 
@@ -43,6 +46,9 @@ public class TrainingController {
 
   @Autowired
   private ClassInfoService classInfoService;
+
+  @Autowired
+  private ErrorRateService errorRateService;
 
   @Autowired
   private PredictorInfoService predictorInfoService;
@@ -118,9 +124,9 @@ public class TrainingController {
           switch (s.split("\\|")[0].trim()) {
             case "DISCRETE":
               Pair<Double, Double> pairRes = trainUtils.calcDiscrete(classInfo, classInfoDetail, s);
-//              if (pairRes == null) {
-//                continue;
-//              }
+              //              if (pairRes == null) {
+              //                continue;
+              //              }
               double dividend = pairRes.getFirst();
               double divisor = pairRes.getSecond();
               currPredRes *= (dividend) / (divisor);
@@ -147,11 +153,11 @@ public class TrainingController {
       Double checker = 0.0;
       double divisorNorm = 0.0;
       logger.info("\nMCZAL: allPredRes.size(): " + allPredRes.size());
+      logger.info(
+          "\n--------------\nMCZAL: allPredRes.size(): " + allPredRes + "\n--------------\n\n");
       for (String s : allPredRes) {
-        logger.info("\nMCZAL: s from allPredRes => " + s);
-
+        //        logger.info("\nMCZAL: s from allPredRes => " + s);
         divisorNorm += Double.parseDouble(s.split("\\|")[1]);
-
         if (Double.parseDouble(s.split("\\|")[1]) > checker) {
           checker = Double.parseDouble(s.split("\\|")[1]);
           maxS = s;
@@ -168,8 +174,26 @@ public class TrainingController {
       //    * HashMap<"ClassName","ClassVal|[Class]ResultValue">
       resultPerClass.put(maxSNorm.split(",")[0], maxSNorm.split(",")[1]);
     });
-    logger.info("\nMCZAL: resultPerClass => " + resultPerClass.toString());
+    logger.info("\nMCZAL: resultPerClass => \n\n " + resultPerClass.toString() + "\n");
 
+    /**
+     * Apply result to error rate
+     * */
+    logger.info("\n\n" + singletonQuery.toString() + "\n\n");
+    resultPerClass.entrySet().stream().forEach(resClass -> {
+      ErrorRate errorRateAcc = errorRateService.findByErrorType(ErrorType.ACCUMULATIVE);
+      ErrorRate errorRateLast = errorRateService.findByErrorType(ErrorType.LAST);
+      singletonQuery.getClassInfos().stream()
+          .filter(s -> s.split("\\|")[0].trim().equalsIgnoreCase(resClass.getKey()))
+          .forEach(classWanted -> {
+            if (classWanted.split("\\|")[1].trim()
+                .equalsIgnoreCase(resClass.getValue().split("\\|")[1].trim())) {
+              
+            } else {
+
+            }
+          });
+    });
     redirectAttributes.addFlashAttribute("success", "Success training NB-C");
     return "redirect:" + ErrorRateController.ABSOLUTE_PATH;
   }

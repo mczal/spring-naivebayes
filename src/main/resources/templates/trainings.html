@@ -6,7 +6,7 @@
 </head>
 <body>
 <h2 th:fragment="header">
-    Train NBC Model
+    Test NBC Model
 </h2>
 <div class="content" th:fragment="content">
     <div class="container">
@@ -18,7 +18,7 @@
                 <hr/>
                 <form id="singletonForm" class="form-horizontal" th:object="${singleton}"
                       method="post"
-                      th:action="@{/admin/train/singleton}">
+                      th:action="@{/admin/testing/singleton}">
 
                     <h5>Predictors</h5>
                     <div class="row" th:each="predictor : ${predictors}">
@@ -82,7 +82,7 @@
                 <hr/>
 
                 <form class="form-horizontal" th:object="${trainFile}" method="post"
-                      th:action="@{/admin/train/files}" enctype="multipart/form-data">
+                      th:action="@{/admin/testing/files}" enctype="multipart/form-data">
 
                     <div class="form-group">
                         <!--th:class="${#fields.hasErrors('files')} ? 'form-group has-error' : 'form-group'"-->

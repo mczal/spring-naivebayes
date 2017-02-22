@@ -133,6 +133,27 @@ public class BayesianModelServiceImpl implements BayesianModelService {
             }
             predictorInfoDao.save(predictorInfo);
             break;
+            /**
+             * Rev 0.1 match the numeric
+             * */
+            //            PredictorInfo predictorInfo =
+            //                predictorInfoDao.findByPredictorName(splitterInner[0].trim());
+            //            if (predictorInfo == null) {
+            //              predictorInfo = new PredictorInfo();
+            //              predictorInfo.setPredictorName(splitterInner[0].trim());
+            //              predictorInfo.setType(Type.DISCRETE);
+            //            }
+            //            PredictorInfoDetail predictorInfoDetail = new PredictorInfoDetail();
+            //            predictorInfoDetail.setClassPriorName(splitterInner[2].trim());
+            //            predictorInfoDetail.setClassPriorValue(splitterInner[3].trim());
+            //            //            predictorInfoDetail.setMean(new BigDecimal(Double.parseDouble(splitterInfo[0])));
+            //            //            predictorInfoDetail.setSigma(new BigDecimal(Double.parseDouble(splitterInfo[1])));
+            //            predictorInfoDetail.setValue(splitterInner[1].trim());
+            //            predictorInfoDetail.setCount((int) Double.parseDouble(splitterInner[4].trim()));
+            //            predictorInfoDetail.setPredictorInfo(predictorInfo);
+            //            predictorInfo.getPredictorInfoDetails().add(predictorInfoDetail);
+            //            predictorInfoDao.save(predictorInfo);
+            //            break;
           }
           case "CLASS": {
             //          logger.info("\nMC : s => "+s);
