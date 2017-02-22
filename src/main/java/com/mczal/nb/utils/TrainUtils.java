@@ -36,7 +36,7 @@ public class TrainUtils {
         .findByPredictorNameAndPredValAndClassNameAndClassVal(s.split("\\|")[1].trim(),
             s.split("\\|")[2].trim(), classInfo.getClassName(), classInfoDetail.getValue());
     if (bayesianModelDividend == null) {
-      logger.info("\n\n GAGILS => Mczal: method => "
+      logger.info("\n\n GAGAL (data frekuensi 0) => Mczal: method => "
           + "findByPredictorNameAndPredValAndClassNameAndClassVal(" + s.split("\\|")[1].trim()
           + ", " + s.split("\\|")[2].trim() + ", " + classInfo.getClassName() + ", "
           + classInfoDetail.getValue() + ")" + "\n\n\n");
