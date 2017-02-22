@@ -78,17 +78,16 @@
         </a>
       </div>
     </div>
-    <div class="row">
-      <div class="col-xs-6 m-t-20 no-padding">
-        <a href="#" class="p-l-40"><img th:src="@{/assets/img/demo/calendar_app.svg}"
-                                        alt="socail"/>
-        </a>
-      </div>
-      <div class="col-xs-6 m-t-20 no-padding">
-        <a href="#" class="p-l-10"><img th:src="@{/assets/img/demo/add_more.svg}"
-                                        alt="socail"/>
-        </a>
-      </div>
+    <!-- END SIDEBAR MENU TOP TRAY CONTENT-->
+    <!-- BEGIN SIDEBAR MENU HEADER-->
+    <!-- END SIDEBAR MENU HEADER-->
+    <!-- START SIDEBAR MENU -->
+    <div class="sidebar-menu">
+        <!-- BEGIN SIDEBAR MENU ITEMS-->
+        <ul class="menu-items ul-style" th:replace="layouts/menu :: left_menu">
+
+        </ul>
+        <div class="clearfix"></div>
     </div>
   </div>
   <!-- END SIDEBAR MENU TOP TRAY CONTENT-->

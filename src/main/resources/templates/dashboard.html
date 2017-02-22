@@ -113,7 +113,7 @@
                                         <td style="background: antiquewhite;"
                                             th:text="${predictorInfoDetail.mean}">[Mean]
                                         </td>
-                                        <td style="background: antiquewhite;"
+                                        <td style="background: antiquewhite; border-right: thin solid black;"
                                             th:text="${predictorInfoDetail.sigma}">[Sigma]
                                         </td>
                                         <td style="background: antiquewhite;"
@@ -165,56 +165,63 @@
                     <small>C_V = Class Name</small>
                 </span>
             </div>
-            <div class="col-sm-6 col-md-6 col-lg-6">
-                <h4 class="text-center">Discrete</h4>
-                <table class="table table-condensed table-bordered persist-area">
-                    <thead>
-                    <tr class="persist-header">
-                        <th>Id</th>
-                        <th>p_n</th>
-                        <th>p_v</th>
-                        <th>c_n</th>
-                        <th>c_v</th>
-                        <th>count</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="disc : ${discreteModels}">
-                        <td th:text="${disc.id}">Id</td>
-                        <td th:text="${disc.predictorName}">p_n</td>
-                        <td th:text="${disc.predVal}">p_v</td>
-                        <td th:text="${disc.className}">c_n</td>
-                        <td th:text="${disc.classVal}">c_v</td>
-                        <td th:text="${disc.count}">count</td>
-                    </tr>
-                    </tbody>
-                </table>
+
+            <div class="row">
+                <div class="col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10 col-lg-offset-1 col-lg-10">
+                    <h4 class="text-center">Numeric</h4>
+                    <table class="table table-condensed table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>p_n</th>
+                            <th>c_n</th>
+                            <th>c_v</th>
+                            <th>mean</th>
+                            <th>sigma</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="num : ${numericModels}">
+                            <td th:text="${num.id}">Id</td>
+                            <td th:text="${num.predictorName}">p_n</td>
+                            <td th:text="${num.className}">p_v</td>
+                            <td th:text="${num.classVal}">c_v</td>
+                            <td th:text="${num.mean}">mean</td>
+                            <td th:text="${num.sigma}">sigma</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-5 col-lg-offset-1 col-lg-5">
-                <h4 class="text-center">Numeric</h4>
-                <table class="table table-condensed table-bordered">
-                    <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>p_n</th>
-                        <th>c_n</th>
-                        <th>c_v</th>
-                        <th>mean</th>
-                        <th>sigma</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="num : ${numericModels}">
-                        <td th:text="${num.id}">Id</td>
-                        <td th:text="${num.predictorName}">p_n</td>
-                        <td th:text="${num.className}">p_v</td>
-                        <td th:text="${num.classVal}">c_v</td>
-                        <td th:text="${num.mean}">mean</td>
-                        <td th:text="${num.sigma}">sigma</td>
-                    </tr>
-                    </tbody>
-                </table>
+
+            <div class="row">
+                <div class="col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10 col-lg-offset-1 col-lg-10">
+                    <h4 class="text-center">Discrete</h4>
+                    <table class="table table-condensed table-bordered persist-area">
+                        <thead>
+                        <tr class="persist-header">
+                            <th>Id</th>
+                            <th>p_n</th>
+                            <th>p_v</th>
+                            <th>c_n</th>
+                            <th>c_v</th>
+                            <th>count</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="disc : ${discreteModels}">
+                            <td th:text="${disc.id}">Id</td>
+                            <td th:text="${disc.predictorName}">p_n</td>
+                            <td th:text="${disc.predVal}">p_v</td>
+                            <td th:text="${disc.className}">c_n</td>
+                            <td th:text="${disc.classVal}">c_v</td>
+                            <td th:text="${disc.count}">count</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
             <!--private String className-->
             <!--private String classVal-->
             <!--private Integer countprivate Integer id-->

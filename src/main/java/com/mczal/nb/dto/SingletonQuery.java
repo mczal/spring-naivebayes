@@ -16,7 +16,7 @@ public class SingletonQuery implements Serializable {
   /**
    * Format :
    * Type|PredictorName|PredictorValue
-   * */
+   */
   private List<String> predictorInfos = new ArrayList<>();
 
   public List<String> getClassInfos() {
@@ -33,5 +33,11 @@ public class SingletonQuery implements Serializable {
 
   public void setPredictorInfos(List<String> predictorInfos) {
     this.predictorInfos = predictorInfos;
+  }
+
+  @Override
+  public String toString() {
+    return "SingletonQuery{" + "classInfos=" + classInfos + ", predictorInfos=" + predictorInfos
+        + '}';
   }
 }
