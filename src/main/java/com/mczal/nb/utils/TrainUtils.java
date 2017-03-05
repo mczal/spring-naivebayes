@@ -28,18 +28,18 @@ public class TrainUtils {
 
   public Pair<Double, Double> calcDiscrete(ClassInfo classInfo, ClassInfoDetail classInfoDetail,
       String s) {
-    logger.info("\nMCZAL: singletonQuey => " + s);
-    logger.info("\nMczal: method => " + "findByPredictorNameAndPredValAndClassNameAndClassVal(" + s
-        .split("\\|")[1].trim() + ", " + s.split("\\|")[2].trim() + ", " + classInfo.getClassName()
-        + ", " + classInfoDetail.getValue() + ")" + "\n");
+    //    logger.info("\nMCZAL: singletonQuey => " + s);
+    //    logger.info("\nMczal: method => " + "findByPredictorNameAndPredValAndClassNameAndClassVal(" + s
+    //        .split("\\|")[1].trim() + ", " + s.split("\\|")[2].trim() + ", " + classInfo.getClassName()
+    //        + ", " + classInfoDetail.getValue() + ")" + "\n");
     BayesianModel bayesianModelDividend = bayesianModelService
         .findByPredictorNameAndPredValAndClassNameAndClassVal(s.split("\\|")[1].trim(),
             s.split("\\|")[2].trim(), classInfo.getClassName(), classInfoDetail.getValue());
     if (bayesianModelDividend == null) {
-      logger.info("\n\n GAGILS => Mczal: method => "
-          + "findByPredictorNameAndPredValAndClassNameAndClassVal(" + s.split("\\|")[1].trim()
-          + ", " + s.split("\\|")[2].trim() + ", " + classInfo.getClassName() + ", "
-          + classInfoDetail.getValue() + ")" + "\n\n\n");
+      //      logger.info("\n\n GAGILS => Mczal: method => "
+      //          + "findByPredictorNameAndPredValAndClassNameAndClassVal(" + s.split("\\|")[1].trim()
+      //          + ", " + s.split("\\|")[2].trim() + ", " + classInfo.getClassName() + ", "
+      //          + classInfoDetail.getValue() + ")" + "\n\n\n");
       return null;
     }
     Set<BayesianModel> bayesianModelsDivisor = bayesianModelService
@@ -50,7 +50,7 @@ public class TrainUtils {
     for (BayesianModel bm : bayesianModelsDivisor) {
       divisor += bm.getCount();
     }
-    logger.info("\nMCZAL : \n divisor: " + divisor + "\ndividend: " + dividend + "\n");
+    //    logger.info("\nMCZAL : \n divisor: " + divisor + "\ndividend: " + dividend + "\n");
     Pair<Double, Double> result = Pair.of(dividend * 1.0, divisor * 1.0);
     return result;
   }
@@ -68,11 +68,11 @@ public class TrainUtils {
     BayesianModel bayesianModel = bayesianModelService
         .findByPredictorNameAndClassNameAndClassValAndType(in.split("\\|")[1].trim(),
             classInfo.getClassName().trim(), classInfoDetail.getValue().trim(), Type.NUMERIC);
-    logger.info(
-        "\n-----TRAIN UTILS---\n" + "findByPredictorNameAndClassNameAndClassValAndType(" + in
-            .split("\\|")[1].trim() + ", " + classInfo.getClassName().trim() + ", "
-            + classInfoDetail.getValue().trim() + ", " + Type.NUMERIC + ")"
-            + "\n----TRAIN UTILS-----\n");
+    //    logger.info(
+    //        "\n-----TRAIN UTILS---\n" + "findByPredictorNameAndClassNameAndClassValAndType(" + in
+    //            .split("\\|")[1].trim() + ", " + classInfo.getClassName().trim() + ", "
+    //            + classInfoDetail.getValue().trim() + ", " + Type.NUMERIC + ")"
+    //            + "\n----TRAIN UTILS-----\n");
     if (bayesianModel == null)
       return -1.0;
     double currSigma = bayesianModel.getSigma().doubleValue();
