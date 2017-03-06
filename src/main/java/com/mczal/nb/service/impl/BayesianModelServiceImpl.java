@@ -68,7 +68,7 @@ public class BayesianModelServiceImpl implements BayesianModelService {
         this.findByPredictorNameAndClassNameAndClassVal(predictorName, className, classVal);
     //        .findByPredictorNameAndClassNameAndClassValAndType(predictorName, className, classVal,
     //            type);
-    logger.info("\n\n----TRAIN SERVICE---\n" + resz + "\n---------\n");
+    //    logger.info("\n\n----TRAIN SERVICE---\n" + resz + "\n---------\n");
     BayesianModel res = null;
     for (Iterator<BayesianModel> itr = resz.iterator(); itr.hasNext(); ) {
       res = itr.next();
