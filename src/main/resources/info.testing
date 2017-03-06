@@ -1,0 +1,2 @@
+@class :Outlook,0;Play,4
+@attribute :Temperature,1,DISCRETE;Humidity,2,DISCRETE;Windy,3,DISCRETE;Rand,5,NUMERICAL

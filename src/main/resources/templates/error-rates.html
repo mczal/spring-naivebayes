@@ -12,34 +12,80 @@
 <section th:fragment="content" class="content">
   <div class="row">
     <div class="col-sm-offset-1 col-sm-10">
-      <table class="table table-hover">
-        <thead>
-        <tr>
-          <th></th>
-          <th>True Positive</th>
-          <th>True Negative</th>
-          <th>False Positive</th>
-          <th>False Negative</th>
-        </tr>
-        </thead>
-        <tbody>
-        <div th:each="errorRate : ${errorRates}">
-          <tr>
-            <td th:text="${errorRate.type}"></td>
-            <td th:text="${errorRate.truePositive}"></td>
-            <td th:text="${errorRate.trueNegative}"></td>
-            <td th:text="${errorRate.falsePositive}"></td>
-            <td th:text="${errorRate.falseNegative}"></td>
-          </tr>
-          <!--<tr th:if="${#strings.contains(errorRate.type,'LAST')}">-->
-          <!---->
-          <!--</tr>-->
-          <!--<tr th:if="${#strings.contains(errorRate.type,'ACCUMULATIVE')}">-->
-
-          <!--</tr>-->
+      <div class="panel panel-default" th:each="confusionMatrix : ${confusionMatrices}">
+        <div class="panel-heading">Created Date : <strong style="color: maroon;"><span
+            th:text="${#dates.format(confusionMatrix.createdDate, 'EEEE, dd-MMMM-yyyy hh:mm:ss a')}"></span></strong>
         </div>
-        </tbody>
-      </table>
+        <div class="panel-body">
+          <h4 th:text="'Results for '+${confusionMatrix.className}"></h4>
+
+          <h5 th:inline="text">Confusion Matrix For Class <i>"[[${confusionMatrix.className}]]"</i>
+          </h5>
+          <code><strong th:utext="${confusionMatrix.printedConfusionMatrix}"></strong></code>
+          <hr/>
+          <div class="row">
+            <div class="col-sm-offset-5 col-sm-2">
+              <button class="btn btn-primary" data-toggle="collapse"
+                      th:attr="data-target='#'+${confusionMatrix.id}">
+                See Detail
+              </button>
+            </div>
+          </div>
+
+          <div th:attr="id=${confusionMatrix.id}" class="collapse">
+            <table class="table table-hover">
+              <thead>
+              <tr>
+                <td>Id</td>
+                <td>Actual</td>
+                <td>Predicted</td>
+                <td>Percentage</td>
+              </tr>
+              </thead>
+              <tbody>
+              <div th:each="detail : ${confusionMatrix.confusionMatrixDetails}">
+                <tr>
+                  <td th:text="${detail.id}"></td>
+                  <td th:text="${detail.actual}"></td>
+                  <td th:text="${detail.predicted}"></td>
+                  <td th:text="${detail.percentage}"></td>
+                </tr>
+              </div>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+      <!--<table class="table table-hover">-->
+      <!--<thead>-->
+      <!--<tr>-->
+      <!--<th></th>-->
+      <!--<th>True Positive</th>-->
+      <!--<th>True Negative</th>-->
+      <!--<th>False Positive</th>-->
+      <!--<th>False Negative</th>-->
+      <!--</tr>-->
+      <!--</thead>-->
+      <!--<tbody>-->
+      <!--<div th:each="errorRate : ${errorRates}">-->
+      <!--<tr>-->
+      <!--<td th:text="${errorRate.type}"></td>-->
+      <!--<td th:text="${errorRate.truePositive}"></td>-->
+      <!--<td th:text="${errorRate.trueNegative}"></td>-->
+      <!--<td th:text="${errorRate.falsePositive}"></td>-->
+      <!--<td th:text="${errorRate.falseNegative}"></td>-->
+      <!--</tr>-->
+      <!--&lt;!&ndash;<tr th:if="${#strings.contains(errorRate.type,'LAST')}">&ndash;&gt;-->
+      <!--&lt;!&ndash;&ndash;&gt;-->
+      <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+      <!--&lt;!&ndash;<tr th:if="${#strings.contains(errorRate.type,'ACCUMULATIVE')}">&ndash;&gt;-->
+
+      <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+      <!--</div>-->
+      <!--</tbody>-->
+      <!--</table>-->
 
     </div>
   </div>

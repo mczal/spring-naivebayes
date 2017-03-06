@@ -44,6 +44,13 @@
 
   <link th:href="@{/css/dashboardz.css}" rel="stylesheet" type="text/css"/>
 
+  <style>
+    code {
+      display: block;
+      white-space: pre-wrap
+    }
+  </style>
+
   <!--[if lte IE 9]-->
   <!--<link th:href="@{assets/plugins/codrops-dialogFx/dialog.ie.css}" rel="stylesheet" type="text/css"-->
   <!--media="screen"/>-->
@@ -51,6 +58,8 @@
 
   <script type="text/x-mathjax-config">
   MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+
+
   </script>
   <script th:src="'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML'"
           type="text/javascript">
@@ -83,11 +92,11 @@
     <!-- END SIDEBAR MENU HEADER-->
     <!-- START SIDEBAR MENU -->
     <div class="sidebar-menu">
-        <!-- BEGIN SIDEBAR MENU ITEMS-->
-        <ul class="menu-items ul-style" th:replace="layouts/menu :: left_menu">
+      <!-- BEGIN SIDEBAR MENU ITEMS-->
+      <ul class="menu-items ul-style">
 
-        </ul>
-        <div class="clearfix"></div>
+      </ul>
+      <div class="clearfix"></div>
     </div>
   </div>
   <!-- END SIDEBAR MENU TOP TRAY CONTENT-->
@@ -96,7 +105,7 @@
   <!-- START SIDEBAR MENU -->
   <div class="sidebar-menu">
     <!-- BEGIN SIDEBAR MENU ITEMS-->
-    <ul class="menu-items ul-style">
+    <ul class="menu-items ul-style" th:replace="layouts/menu :: left_menu">
       <li class="m-t-30 ">
         <a th:href="@{/admin/home}" class="detailed">
           <span class="title">Dashboard</span>

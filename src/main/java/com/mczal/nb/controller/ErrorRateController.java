@@ -1,6 +1,12 @@
 package com.mczal.nb.controller;
 
+
+import com.mczal.nb.model.ConfusionMatrixLast;
+import com.mczal.nb.service.ConfusionMatrixLastService;
 import com.mczal.nb.service.ErrorRateService;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,13 +25,23 @@ public class ErrorRateController {
 
   private static final String LAYOUTS_ADMIN = "layouts/admin";
 
+  private final Logger logger = LoggerFactory.getLogger(getClass());
+
   @Autowired
   private ErrorRateService errorRateService;
+
+  @Autowired
+  private ConfusionMatrixLastService confusionMatrixLastService;
 
   @RequestMapping({"", "/"})
   public String index(Model model) {
     model.addAttribute("view", "error-rates");
     model.addAttribute("errorRates", errorRateService.listAll());
+
+    List<ConfusionMatrixLast> confusionMatrices = confusionMatrixLastService.listAll();
+//    logger.info(confusionMatrices.get(0).toString());
+    model.addAttribute("confusionMatrices", confusionMatrices);
+
     return LAYOUTS_ADMIN;
   }
 
