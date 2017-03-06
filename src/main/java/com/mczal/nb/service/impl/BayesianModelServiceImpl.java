@@ -205,7 +205,8 @@ public class BayesianModelServiceImpl implements BayesianModelService {
             break;
           }
           default:
-            break;
+            throw new IllegalArgumentException("<mczal>UNDEFINED CASE</mczal>");
+//            break;
         }
       });
     }
