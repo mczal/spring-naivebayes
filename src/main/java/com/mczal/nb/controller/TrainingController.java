@@ -122,7 +122,7 @@ public class TrainingController {
         }
       });
     });
-    logger.info(attributeInfos.toString());
+//    logger.info(attributeInfos.toString());
     BufferedReader br1 =
         new BufferedReader(new InputStreamReader(trainFile.getFiles()[0].getInputStream()));
     br1.lines().forEach(s -> {
@@ -132,7 +132,7 @@ public class TrainingController {
       String[] in = s.split(",");
       for (int i = 0; i < in.length; i++) {
         String attrInfo = attributeInfos.get(i);
-        logger.info("\nattrInfo:\n" + attrInfo + " : " + attrInfo.split("\\|").length + "\n\n");
+//        logger.info("\nattrInfo:\n" + attrInfo + " : " + attrInfo.split("\\|").length + "\n\n");
         if (attrInfo == null) {
           throw new IllegalArgumentException("Null for attributeInfos key=" + i);
         }
@@ -152,11 +152,11 @@ public class TrainingController {
       singletonQuery.setPredictorInfos(predictorInfos);
       this.trainSingleton(singletonQuery, redirectAttributes, confusionEachClassz,
           resultPerClasses);
-      //      logger.info("\n\n" + singletonQuery.toString() + "\n\n");
+      logger.info("\nsingletonQuery.toString(): \n" + singletonQuery.toString() + "\n\n");
     });
 
-    redirectAttributes.addFlashAttribute("success", "Success training NB-C");
-    return "redirect:" + ABSOLTE_PATH;
+    redirectAttributes.addFlashAttribute("success", "Complete test NB-Classifier");
+    return "redirect:" + ErrorRateController.ABSOLUTE_PATH;
   }
 
   @RequestMapping(value = "/singleton",
@@ -227,35 +227,49 @@ public class TrainingController {
         outer:
         for (String s : singletonQuery.getPredictorInfos()) {
           s = s.trim();
-          switch (s.split("\\|")[0].trim()) {
-            case "DISCRETE":
-              Pair<Double, Double> pairRes = trainUtils.calcDiscrete(classInfo, classInfoDetail, s);
-              if (pairRes == null) {
-                flag = 1;
-                break outer;
-              }
-              double dividend = pairRes.getFirst();
-              double divisor = pairRes.getSecond();
-              currPredRes *= (dividend) / (divisor);
-              //              logger.info("\nMCZAL: currPredRes => " + currPredRes + "\n");
-              break;
-            case "NUMERIC":
-              double res = trainUtils.calcNormDistEachClass(classInfo, classInfoDetail, s);
-              //              logger.info("\n\nMCZAL : double res =>" + res + "\n-----\n");
-              currPredRes *= res;
-              //              logger.info("\n\nMCZAL : currPredRes After doubled =>" + currPredRes + "\n-----\n");
-              break;
+          if (s.split("\\|")[0].trim().equals("DISCRETE")) {
+            Pair<Double, Double> pairRes = trainUtils.calcDiscrete(classInfo, classInfoDetail, s);
+            if (pairRes == null) {
+              flag = 1;
+              break outer;
+            }
+            double dividend = pairRes.getFirst();
+            double divisor = pairRes.getSecond();
+            logger.info("\n240 dividend:" + dividend + " / divisor:" + divisor
+                + " = currPredRes:" + (dividend / divisor) + " "
+                + "=> currPredResBef " + currPredRes + " "
+                + "=> accCurrPredRes " + currPredRes * (dividend / divisor));
+            currPredRes *= (dividend / divisor);
+            //              logger.info("\nMCZAL: currPredRes => " + currPredRes + "\n");
+          } else if (s.split("\\|")[0].trim().equals("NUMERIC") || s.split("\\|")[0].trim()
+              .equals("NUMERICAL")) {
+            double res = trainUtils.calcNormDistEachClass(classInfo, classInfoDetail, s);
+            if (res == -1.0) {
+              throw new IllegalArgumentException("RES = " + res);
+            }
+            //              logger.info("\n\nMCZAL : double res =>" + res + "\n-----\n");
+//            logger.info(
+//                "\n251 res =>" + res + "currPredRes => " +
+//                    currPredRes + "** currPredRes * res = "
+//                    + currPredRes * res
+//                    + "\n-----\n");
+            currPredRes *= res;
           }
+
         }
         if (flag == 1) {
-          logger.info(
-              "Zero-Frequency Problem Occured. Ignore Class Value For: " + classInfo.getClassName()
-                  + " -> " + classInfoDetail.getValue());
+//          logger.info(
+//              "261 Zero-Frequency Problem Occured. Ignore Class Value For: " + classInfo
+//                  .getClassName()
+//                  + " -> " + classInfoDetail.getValue());
         } else {
           currPredRes *= (classInfoDetail.getCount() * 1.0) / (accFinal * 1.0);
           //        * List<ClassName,ClassVal|Result>
+//          logger.info("\n\n267 MCZAL : currPredRes After finalPred =>" + currPredRes + "\n-----\n");
           allPredRes
               .add(classInfo.getClassName() + "," + classInfoDetail.getValue() + "|" + currPredRes);
+//          logger.info("\n\n270 MCZAL : allPredRes just added =>" + allPredRes + "\n-----\n");
+
         }
       });
       /**
@@ -263,7 +277,7 @@ public class TrainingController {
        * maxS  => ClassName,ClassVal|Result
        * */
       String maxS = "";
-      Double checker = 0.0;
+      double checker = Double.MIN_VALUE;
       double divisorNorm = 0.0;
       //      logger.info("\nMCZAL: allPredRes.size(): " + allPredRes.size());
       //      logger.info(
@@ -277,8 +291,11 @@ public class TrainingController {
         }
       }
       String maxSNorm = maxS.split(",")[0] + "," + maxS.split(",")[1].split("\\|")[0];
-      double resNorm = Double.parseDouble(maxS.split("\\|")[1]);
+      double resNorm = checker;
       resNorm = (resNorm / divisorNorm) * 100.0;
+//      logger.info(
+//          "296 (resNorm:" + checker + " / divisorNorm:" + divisorNorm + ") * 100 = resNorm:"
+//              + resNorm);
       DecimalFormat df = new DecimalFormat("#.00");
       df.setRoundingMode(RoundingMode.HALF_UP);
       maxSNorm += "|" + df.format(resNorm) + "%";
@@ -287,14 +304,14 @@ public class TrainingController {
       //    * HashMap<"ClassName","ClassVal|[Class]ResultValue">
       resultPerClass.put(maxSNorm.split(",")[0], maxSNorm.split(",")[1]);
     });
-    logger.info("\nMCZAL: resultPerClass => " + resultPerClass.toString());
-    logger.info("\nMCZAL: singletonQuery => " + singletonQuery.toString());
+//    logger.info("\nMCZAL: resultPerClass => " + resultPerClass.toString());
+//    logger.info("\nMCZAL: singletonQuery => " + singletonQuery.toString());
 
     /**
      * Apply result to error rate
      * */
     //    logger.info("\n\n" + singletonQuery.toString() + "\n\n");
-    logger.info("\nMCZAL: confusionEachClass => \n" + confusionEachClass.toString());
+//    logger.info("\n313 MCZAL: confusionEachClass => \n" + confusionEachClass.toString());
     List<WrapperTestingResponse> wrapperTestingResponses = new ArrayList<>();
     resultPerClass.entrySet().stream().forEach(resClass -> {
       WrapperTestingResponse wrapperTestingResponse = new WrapperTestingResponse();
@@ -320,7 +337,8 @@ public class TrainingController {
             String predicted = resClass.getValue().split("\\|")[0].trim();
             wrapperTestingResponse.setActual(actual);
             if (actual.equalsIgnoreCase(predicted)) {
-              logger.info("\nEQUAL Actual => " + actual + " ; Predicted => " + predicted + "\n");
+              logger
+                  .info("\n339 EQUAL Actual => " + actual + " ; Predicted => " + predicted + "\n");
               int index = confusionMatrix.getInfo().get(actual);
               confusionMatrix.getMatrix()[index][index]++;
             } else {
@@ -361,7 +379,7 @@ public class TrainingController {
 //      confusionMatrixModel
 //          .setPrintedConfusionMatrix(wrapperTestingResponse.getPrintedConfusionMatrix());
 
-      logger.info("\nConfusionMatrix: \n" + confusionMatrix.stringPrintedMatrix() + "\n");
+//      logger.info("\nConfusionMatrix: \n" + confusionMatrix.stringPrintedMatrix() + "\n");
 
       try {
         confusionMatrixLastService.save(confusionMatrixLast);

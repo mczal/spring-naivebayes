@@ -26,6 +26,19 @@ public class TrainUtils {
 
   private BayesianModelService bayesianModelService;
 
+  private double calcNormalDist(double mean, double sigma, double x) {
+//    double divisor = Math.sqrt(2 * Math.PI * sigma);
+//    double pemangkat = ((Math.pow(x - mean, 2)) * -1.0 / (2.0 * Math.pow(sigma, 2)));
+//    return (1 / divisor) * (Math.pow(Math.E, pemangkat));
+
+    double divisor = Math.sqrt(2.0 * Math.PI * sigma);
+    double powerDividend = Math.pow((x - mean), 2) * -1;
+    double powerDivisor = 2.0 * Math.pow(sigma, 2);
+    double resPower = powerDividend / powerDivisor;
+    double currRes = (1 / divisor) * (Math.pow(Math.E, resPower));
+    return currRes;
+  }
+
   public Pair<Double, Double> calcDiscrete(ClassInfo classInfo, ClassInfoDetail classInfoDetail,
       String s) {
     //    logger.info("\nMCZAL: singletonQuey => " + s);
@@ -50,7 +63,7 @@ public class TrainUtils {
     for (BayesianModel bm : bayesianModelsDivisor) {
       divisor += bm.getCount();
     }
-    //    logger.info("\nMCZAL : \n divisor: " + divisor + "\ndividend: " + dividend + "\n");
+//    logger.info("\nMCZAL : \n divisor: " + divisor + "\ndividend: " + dividend + "\n");
     Pair<Double, Double> result = Pair.of(dividend * 1.0, divisor * 1.0);
     return result;
   }
@@ -73,8 +86,9 @@ public class TrainUtils {
     //            .split("\\|")[1].trim() + ", " + classInfo.getClassName().trim() + ", "
     //            + classInfoDetail.getValue().trim() + ", " + Type.NUMERIC + ")"
     //            + "\n----TRAIN UTILS-----\n");
-    if (bayesianModel == null)
+    if (bayesianModel == null) {
       return -1.0;
+    }
     double currSigma = bayesianModel.getSigma().doubleValue();
     double currMean = bayesianModel.getMean().doubleValue();
     double res = calcNormalDist(currMean, currSigma, x);
@@ -98,12 +112,6 @@ public class TrainUtils {
     //              + "|" + currRes);
     //    });
 
-  }
-
-  private double calcNormalDist(double mean, double sigma, double x) {
-    double divisor = Math.sqrt(2 * Math.PI * sigma);
-    double pemangkat = -1.0 * ((Math.pow(x - mean, 2)) / (2 * Math.pow(sigma, 2)));
-    return (1 / divisor) * (Math.pow(Math.E, pemangkat));
   }
 
   @Autowired
