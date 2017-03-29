@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+  <title>Title</title>
+  <link th:src="'https://cdn.jsdelivr.net/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js'"/>
+</head>
+<body>
+<h2 th:fragment="header">
+  Result Detail -&nbsp;
+  <small th:text="${id}"></small>
+</h2>
+<div class="content" th:fragment="content">
+
+  <!-- Pagination Bar -->
+  <div class="row">
+    <div class="pagination" th:replace="layouts/pagination :: paginationbar">
+      <ul>
+        <li><a href='#'>Prev</a></li>
+        <li><a href='#'>1</a></li>
+        <li><a href='#'>2</a></li>
+        <li><a href='#'>3</a></li>
+        <li><a href='#'>4</a></li>
+        <li><a href='#'>5</a></li>
+        <li><a href='#'>Next</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-offset-2 col-sm-8">
+      <table class="table table-condensed">
+        <thead>
+        <tr>
+          <th>Id</th>
+          <th>Actual</th>
+          <th>Predicted</th>
+          <th>Percentage</th>
+        </tr>
+        </thead>
+        <tbody>
+        <div th:each="detail : ${page.page.content}">
+          <tr>
+            <td th:text="${detail.id}"></td>
+            <td th:text="${detail.actual}"></td>
+            <td th:text="${detail.predicted}"></td>
+            <td th:text="${detail.percentage}"></td>
+          </tr>
+        </div>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>

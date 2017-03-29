@@ -12,8 +12,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -32,12 +34,19 @@ public class ConfusionMatrixLast implements Serializable {
 
   private static final long serialVersionUID = -6423414871356377433L;
 
+  /**
+   * TODO: RECONS
+   */
+  @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+  @JoinColumn(name = "classInfoId")
+  private ClassInfo classInfo;
+
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
 
   @OneToMany(cascade = CascadeType.ALL,
-      fetch = FetchType.EAGER,
+      fetch = FetchType.LAZY,
       mappedBy = "confusionMatrixLast")
   private List<ConfusionMatrixDetail> confusionMatrixDetails = new ArrayList<ConfusionMatrixDetail>();
 
@@ -58,6 +67,14 @@ public class ConfusionMatrixLast implements Serializable {
   @Lob
   @Column(name = "printedConfusionMatrix", length = 10000)
   private String printedConfusionMatrix;
+
+  public ClassInfo getClassInfo() {
+    return classInfo;
+  }
+
+  public void setClassInfo(ClassInfo classInfo) {
+    this.classInfo = classInfo;
+  }
 
   public String getClassName() {
     return className;

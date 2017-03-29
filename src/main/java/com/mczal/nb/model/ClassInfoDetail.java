@@ -1,7 +1,18 @@
 package com.mczal.nb.model;
 
-import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  * Created by Gl552 on 1/22/2017.
@@ -19,14 +30,15 @@ public class ClassInfoDetail implements Serializable {
   @JoinColumn(name = "classInfoId")
   private ClassInfo classInfo;
 
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "classInfoDetail")
+  private List<ErrorRate> errorRates = new ArrayList<ErrorRate>();
+
   @Column
   private Integer count = 0;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
-
-  private Boolean selected = false;
 
   @Column
   private String value;
@@ -47,20 +59,20 @@ public class ClassInfoDetail implements Serializable {
     this.count = count;
   }
 
+  public List<ErrorRate> getErrorRates() {
+    return errorRates;
+  }
+
+  public void setErrorRates(List<ErrorRate> errorRates) {
+    this.errorRates = errorRates;
+  }
+
   public Integer getId() {
     return id;
   }
 
   public void setId(Integer id) {
     this.id = id;
-  }
-
-  public Boolean getSelected() {
-    return selected;
-  }
-
-  public void setSelected(Boolean selected) {
-    this.selected = selected;
   }
 
   public String getValue() {

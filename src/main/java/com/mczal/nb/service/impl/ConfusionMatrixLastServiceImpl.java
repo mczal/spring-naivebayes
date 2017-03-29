@@ -57,6 +57,11 @@ public class ConfusionMatrixLastServiceImpl implements ConfusionMatrixLastServic
   }
 
   @Override
+  public ConfusionMatrixLast findById(Integer id) {
+    return confusionMatrixLastDao.findOne(id);
+  }
+
+  @Override
   public ConfusionMatrixLast findById(String id) throws Exception {
     return null;
   }

@@ -1,5 +1,6 @@
 package com.mczal.nb.service;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -12,6 +13,15 @@ import java.util.List;
 public class TestService {
 
   @Test
+  public void testSplitLength() {
+    String tst = "abcd/asdlj/asdl";
+    String[] splitter = tst.split("dataset");
+    System.out.println(splitter.length);
+    System.out.println(Arrays.toString(splitter));
+  }
+
+  @Test
+//  @Ignore
   public void testStreamForEachArray() {
     int length = 1000000;
     int[] arr = new int[length];
@@ -24,6 +34,7 @@ public class TestService {
   }
 
   @Test
+//  @Ignore
   public void testStreamForEachList() {
     int length = 1000000;
     List<Integer> arr = new ArrayList<>();

@@ -15,12 +15,20 @@
                 class="glyphicon glyphicon-dashboard"></i></span>
     </li>
     <li class="">
+      <a th:href="@{/admin/input-set}" class="detailed">
+        <span class="title">Input Set</span>
+        <span class="details">Upload Input File To HDFS</span>
+      </a>
+      <span th:class="${#strings.contains(view,'input-set')} ? 'bg-success icon-thumbnail' : 'icon-thumbnail'"><i
+          class="glyphicon glyphicon-cloud-upload"></i></span>
+    </li>
+    <li class="">
         <a th:href="@{/admin/renew-model}" class="detailed">
             <span class="title">Renew Model</span>
             <span class="details">Upload New Model</span>
         </a>
         <span th:class="${#strings.contains(view,'renew-model')} ? 'bg-success icon-thumbnail' : 'icon-thumbnail'"><i
-                class="glyphicon glyphicon-cloud-upload"></i></span>
+                class="glyphicon glyphicon-pencil"></i></span>
     </li>
     <li class="">
         <a th:href="@{/admin/testing}" class="detailed">

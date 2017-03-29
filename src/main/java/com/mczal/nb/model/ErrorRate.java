@@ -1,52 +1,56 @@
 package com.mczal.nb.model;
 
 import com.mczal.nb.model.util.ErrorType;
-
-import javax.persistence.*;
 import java.io.Serializable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * Created by Gl552 on 2/12/2017.
  */
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = "type")})
 public class ErrorRate implements Serializable {
+
   private static final long serialVersionUID = -774762515628401586L;
 
-  @Column
-  private Integer falseNegative = 0;
-
-  @Column
-  private Integer falsePositive = 0;
+//  @Column
+//  private Integer positive = 0;
+//
+//  @Column
+//  private Integer negative = 0;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
 
-  @Column
-  private Integer trueNegative = 0;
-
-  @Column
-  private Integer truePositive = 0;
-
   @Column(name = "type")
   @Enumerated(EnumType.STRING)
   private ErrorType type;
 
-  public Integer getFalseNegative() {
-    return falseNegative;
+  @ManyToOne(cascade = CascadeType.DETACH)
+  @JoinColumn(name = "classInfoDetailId")
+  private ClassInfoDetail classInfoDetail;
+
+  @Column
+  private String operation;
+
+  @Column
+  private Double result;
+
+  public ClassInfoDetail getClassInfoDetail() {
+    return classInfoDetail;
   }
 
-  public void setFalseNegative(Integer falseNegative) {
-    this.falseNegative = falseNegative;
-  }
-
-  public Integer getFalsePositive() {
-    return falsePositive;
-  }
-
-  public void setFalsePositive(Integer falsePositive) {
-    this.falsePositive = falsePositive;
+  public void setClassInfoDetail(ClassInfoDetail classInfoDetail) {
+    this.classInfoDetail = classInfoDetail;
   }
 
   public Integer getId() {
@@ -57,20 +61,20 @@ public class ErrorRate implements Serializable {
     this.id = id;
   }
 
-  public Integer getTrueNegative() {
-    return trueNegative;
+  public String getOperation() {
+    return operation;
   }
 
-  public void setTrueNegative(Integer trueNegative) {
-    this.trueNegative = trueNegative;
+  public void setOperation(String operation) {
+    this.operation = operation;
   }
 
-  public Integer getTruePositive() {
-    return truePositive;
+  public Double getResult() {
+    return result;
   }
 
-  public void setTruePositive(Integer truePositive) {
-    this.truePositive = truePositive;
+  public void setResult(Double result) {
+    this.result = result;
   }
 
   public ErrorType getType() {
@@ -80,4 +84,30 @@ public class ErrorRate implements Serializable {
   public void setType(ErrorType type) {
     this.type = type;
   }
+
+//  public Integer getNegative() {
+//    return negative;
+//  }
+//
+//  public void setNegative(Integer negative) {
+//    this.negative = negative;
+//  }
+//
+//  public Integer getPositive() {
+//    return positive;
+//  }
+//
+//  public void setPositive(Integer positive) {
+//    this.positive = positive;
+//  }
+
+//  public void incrementNegative() {
+//    this.negative++;
+//  }
+//
+//  public void incrementPositive() {
+//    this.positive++;
+//  }
+
+
 }

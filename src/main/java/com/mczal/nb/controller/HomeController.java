@@ -4,7 +4,14 @@ import com.mczal.nb.dto.RenewModelLocalForm;
 import com.mczal.nb.model.BayesianModel;
 import com.mczal.nb.service.BayesianModelService;
 import com.mczal.nb.service.ClassInfoService;
+import com.mczal.nb.service.ConfusionMatrixLastService;
+import com.mczal.nb.service.ErrorRateService;
 import com.mczal.nb.service.PredictorInfoService;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +21,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.validation.Valid;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Gl552 on 2/4/2017.
@@ -40,6 +41,12 @@ public class HomeController {
 
   @Autowired
   private PredictorInfoService predictorInfoService;
+
+  @Autowired
+  private ConfusionMatrixLastService confusionMatrixLastService;
+
+  @Autowired
+  private ErrorRateService errorRateService;
 
   @RequestMapping("/home")
   public String index(Model model) {
@@ -71,8 +78,9 @@ public class HomeController {
   @RequestMapping("/renew-model")
   public String renewModel(Model model) {
     model.addAttribute("view", "renew-modelz");
-    if (!model.containsAttribute("modelLocal"))
+    if (!model.containsAttribute("modelLocal")) {
       model.addAttribute("modelLocal", new RenewModelLocalForm());
+    }
 
     return LAYOUTS_ADMIN;
   }
@@ -106,6 +114,22 @@ public class HomeController {
     predictorInfoService.listAll().stream().forEach(predictorInfo -> {
       try {
         predictorInfoService.delete(predictorInfo.getId());
+      } catch (Exception e) {
+        e.printStackTrace();
+        redirectAttributes.addFlashAttribute("warning", "Failed renew NB-C model");
+      }
+    });
+    confusionMatrixLastService.listAll().stream().forEach(confusionMatrixLast -> {
+      try {
+        confusionMatrixLastService.delete(confusionMatrixLast.getId());
+      } catch (Exception e) {
+        e.printStackTrace();
+        redirectAttributes.addFlashAttribute("warning", "Failed renew NB-C model");
+      }
+    });
+    errorRateService.listAll().stream().forEach(errorRate -> {
+      try {
+        errorRateService.delete(errorRate.getId());
       } catch (Exception e) {
         e.printStackTrace();
         redirectAttributes.addFlashAttribute("warning", "Failed renew NB-C model");

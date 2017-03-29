@@ -3,11 +3,11 @@ package com.mczal.nb.service.impl;
 import com.mczal.nb.dao.ClassInfoDao;
 import com.mczal.nb.model.ClassInfo;
 import com.mczal.nb.service.ClassInfoService;
+import java.util.List;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * Created by Gl552 on 2/11/2017.
@@ -37,6 +37,17 @@ public class ClassInfoServiceImpl implements ClassInfoService {
   @Override
   public ClassInfo findById(String id) throws Exception {
     return null;
+  }
+
+  @Override
+  public List<ClassInfo> getAllWithErrorDetails() {
+    List<ClassInfo> classInfos = classInfoDao.findAll();
+    classInfos.forEach(classInfo -> {
+      classInfo.getClassInfoDetails().forEach(classInfoDetail -> {
+        Hibernate.initialize(classInfoDetail.getErrorRates());
+      });
+    });
+    return classInfos;
   }
 
   @Override

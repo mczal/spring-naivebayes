@@ -21,39 +21,85 @@
 
           <h5 th:inline="text">Confusion Matrix For Class <i>"[[${confusionMatrix.className}]]"</i>
           </h5>
-          <code><strong th:utext="${confusionMatrix.printedConfusionMatrix}"></strong></code>
-          <hr/>
           <div class="row">
-            <div class="col-sm-offset-5 col-sm-2">
-              <button class="btn btn-primary" data-toggle="collapse"
-                      th:attr="data-target='#'+${confusionMatrix.id}">
-                See Detail
-              </button>
+            <div class="col-sm-offset-1 col-sm-2">
+              <h5 class="text-center"><i>Predicted</i></h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-1">
+              <h5 style="text-align: center"><i>Actual</i></h5>
+            </div>
+            <div class="col-sm-11">
+              <code><strong th:utext="${confusionMatrix.printedConfusionMatrix}"></strong></code>
             </div>
           </div>
 
-          <div th:attr="id=${confusionMatrix.id}" class="collapse">
-            <table class="table table-hover">
-              <thead>
-              <tr>
-                <td>Id</td>
-                <td>Actual</td>
-                <td>Predicted</td>
-                <td>Percentage</td>
-              </tr>
-              </thead>
-              <tbody>
-              <div th:each="detail : ${confusionMatrix.confusionMatrixDetails}">
-                <tr>
-                  <td th:text="${detail.id}"></td>
-                  <td th:text="${detail.actual}"></td>
-                  <td th:text="${detail.predicted}"></td>
-                  <td th:text="${detail.percentage}"></td>
-                </tr>
-              </div>
-              </tbody>
-            </table>
+          <hr/>
+          <!--Error Rates-->
+          <div class="row">
+            <div class="col-sm-4">
+              <!--Accuracy-->
+              <h5 th:text="${confusionMatrix.classInfo.accuracy?.type}"></h5>
+              <span th:inline="text">
+                $$ { [[${confusionMatrix.classInfo.accuracy?.operation}]] } = [[${confusionMatrix.classInfo.accuracy?.result}]] $$
+              </span>
+            </div>
           </div>
+
+          <div th:each="classInfoDetail : ${confusionMatrix.classInfo.classInfoDetails}">
+            <div class="row">
+              <h5 th:inline="text">For value = [[${classInfoDetail.value}]]</h5>
+              <div th:each="error : ${classInfoDetail.errorRates}">
+                <div class="col-sm-offset-1 col-sm-3 text-center">
+                  <span th:inline="text">[[${error.type}]]</span>
+                  <br/>
+                  <span
+                      th:inline="text">$$ { [[${error.operation}]] } = [[${error.result}]] $$</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr/>
+
+          <div class="row">
+            <div class="col-sm-offset-5 col-sm-2">
+              <a class="btn btn-primary"
+                 th:href="@{/admin/error-rate/detail/}+${confusionMatrix.id}">See Detail</a>
+            </div>
+          </div>
+
+          <!--<div class="row">-->
+          <!--<div class="col-sm-offset-5 col-sm-2">-->
+          <!--<button class="btn btn-primary" data-toggle="collapse"-->
+          <!--th:attr="data-target='#'+${confusionMatrix.id}">-->
+          <!--See Detail-->
+          <!--</button>-->
+          <!--</div>-->
+          <!--</div>-->
+          <!--<div th:attr="id=${confusionMatrix.id}" class="collapse">-->
+          <!--<table class="table table-hover">-->
+          <!--<thead>-->
+          <!--<tr>-->
+          <!--<td>Id</td>-->
+          <!--<td>Actual</td>-->
+          <!--<td>Predicted</td>-->
+          <!--<td>Percentage</td>-->
+          <!--</tr>-->
+          <!--</thead>-->
+          <!--<tbody>-->
+          <!--<div th:each="detail : ${confusionMatrix.confusionMatrixDetails}">-->
+          <!--<tr>-->
+          <!--<td th:text="${detail.id}"></td>-->
+          <!--<td th:text="${detail.actual}"></td>-->
+          <!--<td th:text="${detail.predicted}"></td>-->
+          <!--<td th:text="${detail.percentage}"></td>-->
+          <!--</tr>-->
+          <!--</div>-->
+          <!--</tbody>-->
+          <!--</table>-->
+          <!--</div>-->
 
         </div>
       </div>
@@ -91,6 +137,7 @@
   </div>
   <hr/>
 
+  <h3 class="text-center"><i><u>Formula</u></i></h3>
   <div class="row">
     <span style="color: red">*</span>
     <span>
@@ -115,51 +162,61 @@
             <small>fn = False Negative</small>
         </span>
   </div>
-  <!--Accuracy-->
-  <div class="row">
-    <div class="col-sm-offset-1 col-sm-10">
-      <h3>Accuracy</h3>
-      <small>$$Accuracy = {tp + tn \over tp+tn+fn+fp}.$$</small>
-    </div>
-  </div>
-  <hr/>
 
-  <!--Recall-->
-  <div class="row">
-    <div class="col-sm-offset-1 col-sm-10">
-      <h3>Recall</h3>
-      <small>$$R = {tp \over tp + fn}.$$</small>
-    </div>
-  </div>
-  <hr/>
 
-  <!--Precision-->
+  <!--FORMULA-->
   <div class="row">
-    <div class="col-sm-offset-1 col-sm-10">
-      <h3>Precision</h3>
-      <small>$$P = {tp \over tp + fp}.$$</small>
-    </div>
-  </div>
-  <hr/>
-
-  <!--F measure-->
-  <div class="row">
-    <div class="col-sm-offset-1 col-sm-10">
-      <h3>F Measure</h3>
-      <div class="row">
-        <span>
-            <small>$$ \alpha = {coefficient} $$</small>
-        </span>
+    <!--Accuracy-->
+    <div class="col-sm-3">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Accuracy
+        </div>
+        <div class="panel-body">
+          $$Accuracy = {tp + tn \over tp+tn+fn+fp}$$
+        </div>
       </div>
-      <div class="row">
-        <span>
-            <small>$$ \alpha = {2PR \over P + R} .$$</small>
-        </span>
-      </div>
-      <small>$$F = {1 \over {\alpha{1 \over P}+(1-\alpha) {1 \over R} }}.$$</small>
     </div>
+
+    <!--Recall-->
+    <div class="col-sm-offset-1 col-sm-3">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Recall
+        </div>
+        <div class="panel-body">
+          $$R = {tp \over tp + fn} $$
+        </div>
+      </div>
+    </div>
+
+    <!--Precision-->
+    <div class="col-sm-offset-1 col-sm-3">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Precision
+        </div>
+        <div class="panel-body">
+          $$P = {tp \over tp + fp}$$
+        </div>
+      </div>
+    </div>
+
+    <!--F measure-->
+    <div class="col-sm-3">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          F Measure
+        </div>
+        <div class="panel-body">
+          <span>$$ \alpha = {coefficient}$$</span>
+          <span>$$ \alpha = {2PR \over P + R}$$</span>
+          <span>$$F = {1 \over {\alpha{1 \over P}+(1-\alpha) {1 \over R} }}.$$</span>
+        </div>
+      </div>
+    </div>
+
   </div>
-  <hr/>
 
 </section>
 </body>

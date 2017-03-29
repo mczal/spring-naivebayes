@@ -14,4 +14,6 @@ public interface ConfusionMatrixLastService extends CRUDService<ConfusionMatrixL
 
   ConfusionMatrixLast findByClassName(String className);
 
+  ConfusionMatrixLast findById(Integer id);
+
 }
