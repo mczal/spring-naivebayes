@@ -6,9 +6,8 @@
 
   <groupId>com.mczal.nb</groupId>
   <artifactId>spring-naivebayes</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
-
+  <version>1.0</version>
   <name>spring-naivebayes</name>
   <description>Spring Naive Bayes Classifier</description>
 
@@ -20,8 +19,8 @@
   </parent>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <!--<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
+    <!--<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>-->
     <java.version>1.8</java.version>
 
     <!--WebJars-->
@@ -97,45 +96,45 @@
       <!--</exclusion>-->
       <!--</exclusions>-->
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-tomcat</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <!-- SHOULD BE REMOVED ? -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
+      <optional>true</optional>
+    </dependency>
     <!--<dependency>-->
-      <!--<groupId>org.springframework.boot</groupId>-->
-      <!--<artifactId>spring-boot-starter-jetty</artifactId>-->
+    <!--<groupId>org.springframework.boot</groupId>-->
+    <!--<artifactId>spring-boot-starter-jetty</artifactId>-->
     <!--</dependency>-->
 
     <!-- Data Sources -->
-    <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>9.4-1206-jdbc42</version>
-    </dependency>
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <scope>runtime</scope>
-    </dependency>
+    <!--<dependency>-->
+    <!--<groupId>org.postgresql</groupId>-->
+    <!--<artifactId>postgresql</artifactId>-->
+    <!--<version>9.4-1206-jdbc42</version>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+    <!--<groupId>mysql</groupId>-->
+    <!--<artifactId>mysql-connector-java</artifactId>-->
+    <!--<scope>runtime</scope>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <scope>runtime</scope>
     </dependency>
 
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-tomcat</artifactId>
-      <!--<scope>provided</scope>-->
-    </dependency>
     <!--<dependency>-->
     <!--<groupId>javax.servlet</groupId>-->
     <!--<artifactId>javax.servlet-api</artifactId>-->
-    <!--&lt;!&ndash;<version>3.0.1</version>&ndash;&gt;-->
+    <!--<version>3.0.1</version>-->
     <!--<scope>provided</scope>-->
     <!--</dependency>-->
-
-    <!-- SHOULD BE REMOVED ? -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-devtools</artifactId>
-    </dependency>
 
     <!-- TEST Purposes -->
     <dependency>
@@ -182,6 +181,7 @@
 
   <build>
     <plugins>
+      <!-- Package as an executable jar/war -->
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -189,41 +189,41 @@
     </plugins>
   </build>
 
-  <repositories>
-    <repository>
-      <id>spring-snapshots</id>
-      <name>Spring Snapshots</name>
-      <url>https://repo.spring.io/snapshot</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>spring-milestones</id>
-      <name>Spring Milestones</name>
-      <url>https://repo.spring.io/milestone</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>spring-snapshots</id>
-      <name>Spring Snapshots</name>
-      <url>https://repo.spring.io/snapshot</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </pluginRepository>
-    <pluginRepository>
-      <id>spring-milestones</id>
-      <name>Spring Milestones</name>
-      <url>https://repo.spring.io/milestone</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
+  <!--<repositories>-->
+  <!--<repository>-->
+  <!--<id>spring-snapshots</id>-->
+  <!--<name>Spring Snapshots</name>-->
+  <!--<url>https://repo.spring.io/snapshot</url>-->
+  <!--<snapshots>-->
+  <!--<enabled>true</enabled>-->
+  <!--</snapshots>-->
+  <!--</repository>-->
+  <!--<repository>-->
+  <!--<id>spring-milestones</id>-->
+  <!--<name>Spring Milestones</name>-->
+  <!--<url>https://repo.spring.io/milestone</url>-->
+  <!--<snapshots>-->
+  <!--<enabled>false</enabled>-->
+  <!--</snapshots>-->
+  <!--</repository>-->
+  <!--</repositories>-->
+  <!--<pluginRepositories>-->
+  <!--<pluginRepository>-->
+  <!--<id>spring-snapshots</id>-->
+  <!--<name>Spring Snapshots</name>-->
+  <!--<url>https://repo.spring.io/snapshot</url>-->
+  <!--<snapshots>-->
+  <!--<enabled>true</enabled>-->
+  <!--</snapshots>-->
+  <!--</pluginRepository>-->
+  <!--<pluginRepository>-->
+  <!--<id>spring-milestones</id>-->
+  <!--<name>Spring Milestones</name>-->
+  <!--<url>https://repo.spring.io/milestone</url>-->
+  <!--<snapshots>-->
+  <!--<enabled>false</enabled>-->
+  <!--</snapshots>-->
+  <!--</pluginRepository>-->
+  <!--</pluginRepositories>-->
 
 </project>
