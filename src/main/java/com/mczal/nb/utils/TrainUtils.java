@@ -5,13 +5,13 @@ import com.mczal.nb.model.ClassInfo;
 import com.mczal.nb.model.ClassInfoDetail;
 import com.mczal.nb.model.util.Type;
 import com.mczal.nb.service.BayesianModelService;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
-
-import java.util.Set;
 
 /**
  * Created by Gl552 on 2/13/2017.
@@ -19,10 +19,12 @@ import java.util.Set;
 @Component
 public class TrainUtils {
 
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
   //  @Autowired
   //  private PredictorInfoService predictorInfoService;
-
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  @Value("${k.count}")
+  private Integer laplacianSmoothingAdder;
 
   private BayesianModelService bayesianModelService;
 
@@ -45,21 +47,37 @@ public class TrainUtils {
     //    logger.info("\nMczal: method => " + "findByPredictorNameAndPredValAndClassNameAndClassVal(" + s
     //        .split("\\|")[1].trim() + ", " + s.split("\\|")[2].trim() + ", " + classInfo.getClassName()
     //        + ", " + classInfoDetail.getValue() + ")" + "\n");
+    String predictorName = s.split("\\|")[1].trim();
+    String predictorValue = s.split("\\|")[2].trim();
     BayesianModel bayesianModelDividend = bayesianModelService
-        .findByPredictorNameAndPredValAndClassNameAndClassVal(s.split("\\|")[1].trim(),
-            s.split("\\|")[2].trim(), classInfo.getClassName(), classInfoDetail.getValue());
+        .findByPredictorNameAndPredValAndClassNameAndClassVal(predictorName,
+            predictorValue, classInfo.getClassName(), classInfoDetail.getValue());
+
+    int divisor = 0;
+    int dividend;
     if (bayesianModelDividend == null) {
       //      logger.info("\n\n GAGILS => Mczal: method => "
       //          + "findByPredictorNameAndPredValAndClassNameAndClassVal(" + s.split("\\|")[1].trim()
       //          + ", " + s.split("\\|")[2].trim() + ", " + classInfo.getClassName() + ", "
       //          + classInfoDetail.getValue() + ")" + "\n\n\n");
-      return null;
+
+      /**
+       * Debug per March 31st 2017
+       * */
+      throw new RuntimeException("\nZero Frequency problem occured for -> \n"
+          + "PredictorName: " + predictorName + "\n"
+          + "PredictorValue: " + predictorValue + "\n"
+          + "ClassName: " + classInfo.getClassName() + "\n"
+          + "ClassValue: " + classInfoDetail.getValue() + "\n"
+      );
+//      dividend = laplacianSmoothingAdder;
+      //      return null;
+    } else {
+      dividend = bayesianModelDividend.getCount();
     }
     Set<BayesianModel> bayesianModelsDivisor = bayesianModelService
         .findByPredictorNameAndClassNameAndClassVal(s.split("\\|")[1].trim(),
             classInfo.getClassName(), classInfoDetail.getValue());
-    int divisor = 0;
-    int dividend = bayesianModelDividend.getCount();
     for (BayesianModel bm : bayesianModelsDivisor) {
       divisor += bm.getCount();
     }

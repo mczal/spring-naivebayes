@@ -3,14 +3,13 @@ package com.mczal.nb.service.impl;
 import com.mczal.nb.dao.BayesianModelDao;
 import com.mczal.nb.dao.ClassInfoDao;
 import com.mczal.nb.dao.PredictorInfoDao;
-import com.mczal.nb.model.*;
+import com.mczal.nb.model.BayesianModel;
+import com.mczal.nb.model.ClassInfo;
+import com.mczal.nb.model.ClassInfoDetail;
+import com.mczal.nb.model.PredictorInfo;
+import com.mczal.nb.model.PredictorInfoDetail;
 import com.mczal.nb.model.util.Type;
 import com.mczal.nb.service.BayesianModelService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -18,6 +17,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by Gl552 on 1/21/2017.
@@ -36,6 +42,88 @@ public class BayesianModelServiceImpl implements BayesianModelService {
 
   @Autowired
   private PredictorInfoDao predictorInfoDao;
+
+  @Value("${k.count}")
+  private Integer laplacianSmoothingAdder;
+
+  //  @Transactional(readOnly = false)
+  private void laplacianSmoothing() {
+    List<ClassInfo> classInfos = classInfoDao.findAll();
+    if (classInfos.size() <= 0) {
+      throw new RuntimeException("Size of class is equal to zero");
+    }
+    classInfos.forEach(classInfo -> {
+      /**
+       * FOR EACH CLASS
+       * */
+      Set<ClassInfoDetail> classInfoDetails = classInfo.getClassInfoDetails();
+      classInfoDetails.forEach(classInfoDetail -> {
+        /**
+         * FOR EACH CLASS VALUE
+         * */
+        AtomicInteger totalAdditionForCurrClassDetail = new AtomicInteger(0);
+
+        List<PredictorInfo> predictorInfos = predictorInfoDao.findAll();
+        if (predictorInfos.size() <= 0) {
+          throw new RuntimeException("Size of predictor is equal to zero");
+        }
+        predictorInfos.forEach(predictorInfo -> {
+          /**
+           * FOR EACH PREDICTOR
+           * */
+          if (predictorInfo.getType() == Type.DISCRETE) {
+
+            Set<PredictorInfoDetail> predictorInfoDetails = predictorInfo.getPredictorInfoDetails();
+            predictorInfoDetails.forEach(predictorInfoDetail -> {
+              /**
+               * FOR EACH PREDICTOR VALUE
+               * */
+              BayesianModel bayesianModel = bayesianModelDao
+                  .findByPredictorNameAndPredValAndClassNameAndClassVal(
+                      predictorInfo.getPredictorName(), predictorInfoDetail.getValue(),
+                      classInfo.getClassName(), classInfoDetail.getValue());
+              if (bayesianModel == null) {
+                /**
+                 * ZERO FREQ OCCURED
+                 * */
+                logger.info("Zero frequency occured.");
+
+                /**
+                 * HANDLING FOR BAYESIAN MODEL
+                 * */
+                bayesianModel = new BayesianModel();
+                bayesianModel.setClassName(classInfo.getClassName());
+                bayesianModel.setClassVal(classInfoDetail.getValue());
+                bayesianModel.setCount(laplacianSmoothingAdder);
+                bayesianModel.setPredictorName(predictorInfo.getPredictorName());
+                bayesianModel.setPredVal(predictorInfoDetail.getValue());
+                bayesianModel.setType(Type.DISCRETE);
+              } else {
+                bayesianModel.setCount(bayesianModel.getCount() + laplacianSmoothingAdder);
+              }
+              bayesianModelDao.save(bayesianModel);
+              /**
+               * ------------------_WORK SEPARATOR --------------------
+               * HANDLING FOR PREDICTOR INFO DETAIL
+               * */
+              predictorInfoDetail
+                  .setCount(predictorInfoDetail.getCount() + laplacianSmoothingAdder);
+
+              for (int i = 0; i < laplacianSmoothingAdder; i++) {
+                totalAdditionForCurrClassDetail.incrementAndGet();
+              }
+            });
+          }
+          predictorInfoDao.save(predictorInfo);
+        });
+
+        classInfoDetail
+            .setCount(classInfoDetail.getCount() + totalAdditionForCurrClassDetail.get());
+
+      });
+      classInfoDao.save(classInfo);
+    });
+  }
 
   @Override
   @Transactional(readOnly = false)
@@ -102,7 +190,12 @@ public class BayesianModelServiceImpl implements BayesianModelService {
             bayesianModel.setPredVal(splitterInner[1].trim());
             bayesianModel.setClassName(splitterInner[2].trim());
             bayesianModel.setClassVal(splitterInner[3].trim());
-            bayesianModel.setCount((int) Double.parseDouble(splitterInner[4].trim()));
+            int bayesianCount =
+                ((int) Double.parseDouble(splitterInner[4].trim()))
+//                    + laplacianSmoothingAdder
+                ;
+            bayesianModel
+                .setCount(bayesianCount);
             bayesianModel.setType(Type.DISCRETE);
             bayesianModelDao.save(bayesianModel);
             /**
@@ -120,12 +213,11 @@ public class BayesianModelServiceImpl implements BayesianModelService {
                 predictorInfoDetail -> predictorInfoDetail.getValue()
                     .equals(splitterInner[1].trim())).forEach(predictorInfoDetail -> {
               checker.set(true);
-              predictorInfoDetail.setCount(predictorInfoDetail.getCount() + (int) Double
-                  .parseDouble(splitterInner[4].trim()));
+              predictorInfoDetail.setCount(predictorInfoDetail.getCount() + bayesianCount);
             });
             if (!checker.get()) {
               PredictorInfoDetail predictorInfoDetail = new PredictorInfoDetail();
-              predictorInfoDetail.setCount((int) Double.parseDouble(splitterInner[4].trim()));
+              predictorInfoDetail.setCount(bayesianCount);
               predictorInfoDetail.setValue(splitterInner[1].trim());
               predictorInfoDetail.setPredictorInfo(predictorInfo);
               predictorInfo.getPredictorInfoDetails().add(predictorInfoDetail);
@@ -164,8 +256,9 @@ public class BayesianModelServiceImpl implements BayesianModelService {
               classInfo.setClassName(splitterInner[0].trim());
             }
             ClassInfoDetail classInfoDetail = new ClassInfoDetail();
+            int bayesianClassCount = (int) Double.parseDouble(splitterInner[2].trim());
             classInfoDetail.setValue(splitterInner[1].trim());
-            classInfoDetail.setCount((int) Double.parseDouble(splitterInner[2].trim()));
+            classInfoDetail.setCount(bayesianClassCount);
             classInfoDetail.setClassInfo(classInfo);
             classInfo.getClassInfoDetails().add(classInfoDetail);
             classInfoDao.save(classInfo);
@@ -210,6 +303,7 @@ public class BayesianModelServiceImpl implements BayesianModelService {
         }
       });
     }
+    this.laplacianSmoothing();
   }
 
   @Override

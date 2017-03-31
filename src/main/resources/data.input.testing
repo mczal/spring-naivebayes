@@ -1,0 +1,5 @@
+Sunny,Mild,Normal,FALSE,Yes,5
+Rainy,Mild,Normal,TRUE,Yes,4.5
+Overcast,Mild,High,TRUE,Yes,3.1
+Overcast,Hot,Normal,FALSE,Yes,8.2
+Sunny,Mild,High,TRUE,No,3

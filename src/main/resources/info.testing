@@ -1,2 +1,3 @@
 @class :Play,4
 @attribute :Outlook,0,DISCRETE;Temperature,1,DISCRETE;Humidity,2,DISCRETE;Windy,3,DISCRETE;Rand,5,NUMERICAL
+@Count :6

@@ -199,7 +199,7 @@ public class TrainingController {
            * If Predictor
            * */
           attributeInfos.put(Integer.parseInt(info[1]), info[2] + "|" + info[0]);
-        } else {
+        } else if (s.split(":")[0].contains("class")) {
           /**
            * If Class
            * */
@@ -218,20 +218,21 @@ public class TrainingController {
       for (int i = 0; i < in.length; i++) {
         String attrInfo = attributeInfos.get(i);
 //        logger.info("\nattrInfo:\n" + attrInfo + " : " + attrInfo.split("\\|").length + "\n\n");
-        if (attrInfo == null) {
-          throw new IllegalArgumentException("Null for attributeInfos key=" + i);
+        if (attrInfo != null) {
+//          throw new IllegalArgumentException("Null for attributeInfos key=" + i);
+          if (attrInfo.split("\\|").length == 1) {
+            /**
+             * If Class
+             * */
+            classInfos.add(attrInfo + "|" + in[i]);
+          } else {
+            /**
+             * If Predictor
+             * */
+            predictorInfos.add(attrInfo + "|" + in[i]);
+          }
         }
-        if (attrInfo.split("\\|").length == 1) {
-          /**
-           * If Class
-           * */
-          classInfos.add(attrInfo + "|" + in[i]);
-        } else {
-          /**
-           * If Predictor
-           * */
-          predictorInfos.add(attrInfo + "|" + in[i]);
-        }
+
       }
       singletonQuery.setClassInfos(classInfos);
       singletonQuery.setPredictorInfos(predictorInfos);
@@ -346,8 +347,9 @@ public class TrainingController {
 
         }
         if (flag == 1) {
-          logger.info(
-              "261 Zero-Frequency Problem Occured. Ignore Class Value For: " + classInfo
+          throw new RuntimeException(
+              "261 Zero-Frequency Problem Occured. Laplacian smoothing didn't work for: \n"
+                  + classInfo
                   .getClassName()
                   + " -> " + classInfoDetail.getValue());
         } else {
@@ -389,8 +391,8 @@ public class TrainingController {
       DecimalFormat df = new DecimalFormat("#.00");
       df.setRoundingMode(RoundingMode.CEILING);
       maxSNorm += "|" + df.format(resNorm) + "%";
-      logger.info("\nmaxSNorm: " + maxSNorm + " \n resNorm: " + resNorm + " \n checker: " + checker
-          + " \n divisorNorm: " + divisorNorm);
+//      logger.info("\nmaxSNorm: " + maxSNorm + " \n resNorm: " + resNorm + " \n checker: " + checker
+//          + " \n divisorNorm: " + divisorNorm);
       //      logger.info("\nMCZAL: maxS => " + maxS);
       //      logger.info("\nMCZAL: maxSNorm => " + maxSNorm);
       //    * HashMap<"ClassName","ClassVal|[Class]ResultValue">
@@ -409,8 +411,8 @@ public class TrainingController {
       WrapperTestingResponse wrapperTestingResponse = new WrapperTestingResponse();
       wrapperTestingResponse.setClassName(resClass.getKey());
       wrapperTestingResponse.setPredicted(resClass.getValue().split("\\|")[0]);
-      logger.info("resClass.getValue(): " + resClass.getValue());
-      logger.info("resClass.getValue(): " + resClass.getValue());
+//      logger.info("resClass.getValue(): " + resClass.getValue());
+//      logger.info("resClass.getValue(): " + resClass.getValue());
       wrapperTestingResponse.setPercentage(resClass.getValue().split("\\|")[1]);
       //    *resClass=> HashMap<"ClassName","ClassVal|[Class]ResultValue">
 
