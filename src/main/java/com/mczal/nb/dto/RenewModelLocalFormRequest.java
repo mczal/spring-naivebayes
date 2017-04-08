@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Created by Gl552 on 2/7/2017.
  */
-public class RenewModelLocalForm implements Serializable {
+public class RenewModelLocalFormRequest implements Serializable {
   private static final long serialVersionUID = -5175977158367731520L;
 
   @NotEmpty

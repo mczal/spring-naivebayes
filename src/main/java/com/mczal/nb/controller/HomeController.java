@@ -1,6 +1,7 @@
 package com.mczal.nb.controller;
 
-import com.mczal.nb.dto.RenewModelLocalForm;
+import com.mczal.nb.dto.RenewModelHdfsFormRequest;
+import com.mczal.nb.dto.RenewModelLocalFormRequest;
 import com.mczal.nb.model.BayesianModel;
 import com.mczal.nb.model.util.Type;
 import com.mczal.nb.service.BayesianModelService;
@@ -8,10 +9,12 @@ import com.mczal.nb.service.ClassInfoService;
 import com.mczal.nb.service.ConfusionMatrixLastService;
 import com.mczal.nb.service.ErrorRateService;
 import com.mczal.nb.service.PredictorInfoService;
+import com.mczal.nb.service.hdfs.HdfsService;
 import com.mczal.nb.utils.McnBasePageWrapper;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +56,59 @@ public class HomeController {
   @Autowired
   private ErrorRateService errorRateService;
 
+  @Autowired
+  private HdfsService hdfsService;
+
+  private Boolean cleanAll() {
+    AtomicBoolean result = new AtomicBoolean(true);
+    bayesianModelService.listAll().stream().forEach(bayesianModel -> {
+      try {
+        bayesianModelService.delete(bayesianModel.getId());
+      } catch (Exception e) {
+        e.printStackTrace();
+//        redirectAttributes.addFlashAttribute("warning", "Failed renew NB-C model");
+        result.set(false);
+      }
+    });
+    classInfoService.listAll().stream().forEach(classInfo -> {
+      try {
+        classInfoService.delete(classInfo.getId());
+      } catch (Exception e) {
+        e.printStackTrace();
+//        redirectAttributes.addFlashAttribute("warning", "Failed renew NB-C model");
+        result.set(false);
+      }
+    });
+    predictorInfoService.listAll().stream().forEach(predictorInfo -> {
+      try {
+        predictorInfoService.delete(predictorInfo.getId());
+      } catch (Exception e) {
+        e.printStackTrace();
+//        redirectAttributes.addFlashAttribute("warning", "Failed renew NB-C model");
+        result.set(false);
+      }
+    });
+    confusionMatrixLastService.listAll().stream().forEach(confusionMatrixLast -> {
+      try {
+        confusionMatrixLastService.delete(confusionMatrixLast.getId());
+      } catch (Exception e) {
+        e.printStackTrace();
+//        redirectAttributes.addFlashAttribute("warning", "Failed renew NB-C model");
+        result.set(false);
+      }
+    });
+    errorRateService.listAll().stream().forEach(errorRate -> {
+      try {
+        errorRateService.delete(errorRate.getId());
+      } catch (Exception e) {
+        e.printStackTrace();
+//        redirectAttributes.addFlashAttribute("warning", "Failed renew NB-C model");
+        result.set(false);
+      }
+    });
+    return result.get();
+  }
+
   @RequestMapping("/home")
   public String index(Model model,
       @RequestParam(required = false, defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
@@ -90,89 +146,67 @@ public class HomeController {
   }
 
   @RequestMapping("/renew-model")
-  public String renewModel(Model model) {
+  public String renewModel(Model model) throws Exception {
     model.addAttribute("view", "renew-modelz");
     if (!model.containsAttribute("modelLocal")) {
-      model.addAttribute("modelLocal", new RenewModelLocalForm());
+      model.addAttribute("modelLocal", new RenewModelLocalFormRequest());
     }
+    if (!model.containsAttribute("modelHdfs")) {
+      model.addAttribute("modelHdfs", new RenewModelHdfsFormRequest());
+    }
+    model.addAttribute("availableDirs", hdfsService.listInputDirOnPath());
 
     return LAYOUTS_ADMIN;
   }
 
+  @RequestMapping(value = "/renew-model-hdfs", method = RequestMethod.POST)
+  public String renewModelHdfsPost(RenewModelHdfsFormRequest modelHdfs,
+      RedirectAttributes redirectAttributes) throws Exception {
+    if (modelHdfs.getModelHdfs() == null || modelHdfs.getModelHdfs().equals("NULL")) {
+      redirectAttributes.addFlashAttribute("danger",
+          "FAILED TO RENEW MODEL FROM HDFS. VALIDATION CONSTRAINT FAILURE OCCURED");
+      return "redirect:/admin/home/renew-model";
+    }
+    if (!cleanAll()) {
+      redirectAttributes.addFlashAttribute("warning", "Failed renew NB-C model");
+      return "redirect:/admin/home/renew-model";
+    }
+
+//    logger.info("\n\nmodelHdfs.getModelHdfs: " + modelHdfs.getModelHdfs() + "\n");
+    BufferedReader br = hdfsService
+        .getOutputModelBufferedReaderFromModelHdfs(modelHdfs.getModelHdfs());
+    if (br == null) {
+//      logger.info("%%HIT THIS%%");
+      redirectAttributes.addFlashAttribute("danger", "Failed renew NB-C model");
+      return "redirect:/admin/home/renew-model";
+    }
+    bayesianModelService.insertNewModel(br);
+
+    redirectAttributes
+        .addFlashAttribute("success", "Success upload new model of classifier from hdfs");
+    return "redirect:/admin/home";
+  }
+
   @RequestMapping(value = "renew-model-local",
       method = RequestMethod.POST)
-  public String renewModelLocalPost(Model model, @Valid RenewModelLocalForm modelLocal,
+  public String renewModelLocalPost(Model model, @Valid RenewModelLocalFormRequest modelLocal,
       BindingResult bindingResult, RedirectAttributes redirectAttributes) throws Exception {
     if (bindingResult.hasErrors()) {
       model.addAttribute("modelLocal", modelLocal);
       model.addAttribute("org.springframework.validation.BindingResult.modelLocal", bindingResult);
       return this.renewModel(model);
     }
-
-    bayesianModelService.listAll().stream().forEach(bayesianModel -> {
-      try {
-        bayesianModelService.delete(bayesianModel.getId());
-      } catch (Exception e) {
-        e.printStackTrace();
-        redirectAttributes.addFlashAttribute("warning", "Failed renew NB-C model");
-      }
-    });
-    classInfoService.listAll().stream().forEach(classInfo -> {
-      try {
-        classInfoService.delete(classInfo.getId());
-      } catch (Exception e) {
-        e.printStackTrace();
-        redirectAttributes.addFlashAttribute("warning", "Failed renew NB-C model");
-      }
-    });
-    predictorInfoService.listAll().stream().forEach(predictorInfo -> {
-      try {
-        predictorInfoService.delete(predictorInfo.getId());
-      } catch (Exception e) {
-        e.printStackTrace();
-        redirectAttributes.addFlashAttribute("warning", "Failed renew NB-C model");
-      }
-    });
-    confusionMatrixLastService.listAll().stream().forEach(confusionMatrixLast -> {
-      try {
-        confusionMatrixLastService.delete(confusionMatrixLast.getId());
-      } catch (Exception e) {
-        e.printStackTrace();
-        redirectAttributes.addFlashAttribute("warning", "Failed renew NB-C model");
-      }
-    });
-    errorRateService.listAll().stream().forEach(errorRate -> {
-      try {
-        errorRateService.delete(errorRate.getId());
-      } catch (Exception e) {
-        e.printStackTrace();
-        redirectAttributes.addFlashAttribute("warning", "Failed renew NB-C model");
-      }
-    });
+    if (!cleanAll()) {
+      redirectAttributes.addFlashAttribute("warning", "Failed renew NB-C model");
+      return "redirec:/admin/home/renew-model";
+    }
 
     BufferedReader br =
         new BufferedReader(new InputStreamReader(modelLocal.getFiles()[0].getInputStream()));
-    //    File file = new File(
-    //        "D:/Projects/Spring/spring-naivebayes/src/main/resources/" + modelLocal.getFiles()[0]
-    //            .getOriginalFilename() + ".input");
-    //    /**
-    //     * Reconsider deleting original file
-    //     * */
-    //    if (file.exists()) {
-    //      file.delete();
-    //    }
-    //    modelLocal.getFiles()[0].transferTo(file);
-    //    Scanner sc = new Scanner(file);
-    //    List<String> models = new ArrayList<>();
-    //    while (sc.hasNext()) {
-    //      String line = sc.nextLine().trim();
-    //      if (line.contains("CLASS")) {
-    //        logger.info("\nCONTROLLER: FILE => " + line);
-    //      }
-    //      models.add(line);
-    //    }
+
     bayesianModelService.insertNewModel(br);
-    redirectAttributes.addFlashAttribute("success", "Success upload new model of classifier");
+    redirectAttributes
+        .addFlashAttribute("success", "Success upload new model of classifier from local");
     return "redirect:/admin/home";
   }
 }

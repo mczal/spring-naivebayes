@@ -539,10 +539,10 @@ public class TestingController {
       redirectAttributes.addFlashAttribute("results", resultPerClass);
 //      model.addAttribute("results", resultPerClasses);
     }
-    logger.info("\n\nsingletonQuery.toString() -> \n"
-        + "" + singletonQuery.toString() + "\n");
-    logger.info("\n\nresultPerClass.toString() -> \n"
-        + "" + resultPerClass.toString() + "\n");
+//    logger.info("\n\nsingletonQuery.toString() -> \n"
+//        + "" + singletonQuery.toString() + "\n");
+//    logger.info("\n\nresultPerClass.toString() -> \n"
+//        + "" + resultPerClass.toString() + "\n");
 //    return LAYOUTS_ADMIN;
     return "redirect:" + ABSOLUTE_PATH + "/predict-new-case";
   }

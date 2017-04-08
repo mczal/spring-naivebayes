@@ -1,6 +1,7 @@
 package com.mczal.nb.service.hdfs;
 
 import java.io.BufferedReader;
+import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -9,6 +10,8 @@ import java.util.List;
 public interface HdfsService {
 
   boolean cleanHdfsDir(String modelDir) throws Exception;
+
+  BufferedReader getOutputModelBufferedReaderFromModelHdfs(String modelHdfs) throws Exception;
 
   List<String> listInputDirOnPath() throws Exception;
 

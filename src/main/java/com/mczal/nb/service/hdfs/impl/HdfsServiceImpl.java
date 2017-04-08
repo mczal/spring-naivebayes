@@ -4,6 +4,7 @@ import com.mczal.nb.service.hdfs.HdfsService;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URI;
@@ -90,6 +91,33 @@ public class HdfsServiceImpl implements HdfsService {
       hdfsFileSystem.delete(fileInputPath, true);
     }
     return true;
+  }
+
+  @Override
+  public BufferedReader getOutputModelBufferedReaderFromModelHdfs(String modelHdfs)
+      throws Exception {
+    modelHdfs += "/output/";
+    FileSystem fs = FileSystem.get(new URI(HDFS_AUTHORITY), conf);
+//    logger
+//        .info("\n\nHDFS_AUTHORITY + HDFS_PATH + modelHdfs: " + HDFS_AUTHORITY + HDFS_PATH
+//            + modelHdfs + "\n");
+    FileStatus[] fileStatus = fs.listStatus(new Path(HDFS_AUTHORITY + HDFS_PATH + modelHdfs));
+    if (fileStatus.length == 0) {
+      return null;
+    }
+    List<String> results = new ArrayList<String>();
+    int i = 1;
+    String hdfsFileName = "";
+    for (FileStatus status : fileStatus) {
+      if (!status.getPath().toString().contains("_SUCCESS")) {
+        hdfsFileName = status.getPath().toString();
+        break;
+      }
+    }
+    Path pt = new Path(hdfsFileName);
+//    logger.info("\n\nHDFS_AUTHORITY + hdfsFileName: " + hdfsFileName + "\n");
+    BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(pt)));
+    return br;
   }
 
   @Override
