@@ -162,7 +162,7 @@ public class HomeController {
   @RequestMapping(value = "/renew-model-hdfs", method = RequestMethod.POST)
   public String renewModelHdfsPost(RenewModelHdfsFormRequest modelHdfs,
       RedirectAttributes redirectAttributes) throws Exception {
-    if (modelHdfs.getModelHdfs() == null || modelHdfs.getModelHdfs().equals("NULL")) {
+    if (modelHdfs.getModelHdfs() == null || modelHdfs.getModelHdfs().equals("null")) {
       redirectAttributes.addFlashAttribute("danger",
           "FAILED TO RENEW MODEL FROM HDFS. VALIDATION CONSTRAINT FAILURE OCCURED");
       return "redirect:/admin/home/renew-model";

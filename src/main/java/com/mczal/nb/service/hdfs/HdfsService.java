@@ -1,8 +1,8 @@
 package com.mczal.nb.service.hdfs;
 
 import java.io.BufferedReader;
-import java.net.URISyntaxException;
 import java.util.List;
+import org.springframework.data.util.Pair;
 
 /**
  * Created by mczal on 09/03/17.
@@ -10,6 +10,10 @@ import java.util.List;
 public interface HdfsService {
 
   boolean cleanHdfsDir(String modelDir) throws Exception;
+
+  Pair<List<BufferedReader>, BufferedReader> getListOfOutputModelBufferedReaderFromModelHdfs(
+      String modelHdfs)
+      throws Exception;
 
   BufferedReader getOutputModelBufferedReaderFromModelHdfs(String modelHdfs) throws Exception;
 

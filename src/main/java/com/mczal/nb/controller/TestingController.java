@@ -2,6 +2,7 @@ package com.mczal.nb.controller;
 
 import com.mczal.nb.controller.utils.ConfusionMatrix;
 import com.mczal.nb.controller.utils.WrapperTestingResponse;
+import com.mczal.nb.dto.RenewModelHdfsFormRequest;
 import com.mczal.nb.dto.SingletonQuery;
 import com.mczal.nb.dto.TrainFile;
 import com.mczal.nb.model.ClassInfo;
@@ -17,6 +18,7 @@ import com.mczal.nb.service.ClassInfoService;
 import com.mczal.nb.service.ConfusionMatrixLastService;
 import com.mczal.nb.service.ErrorRateService;
 import com.mczal.nb.service.PredictorInfoService;
+import com.mczal.nb.service.hdfs.HdfsService;
 import com.mczal.nb.utils.TrainUtils;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -72,6 +74,9 @@ public class TestingController {
 
   @Autowired
   private TrainUtils trainUtils;
+
+  @Autowired
+  private HdfsService hdfsService;
 
   private void calculateErrorRate(HashMap<String, ConfusionMatrix> confusionEachClass) {
     confusionEachClass.forEach((className, confusionMatrix) -> {
@@ -174,19 +179,11 @@ public class TestingController {
   }
 
   @RequestMapping("")
-  public String index(Model model) {
+  public String index(Model model) throws Exception {
     model.addAttribute("view", "testing");
-
-    //    singletonQuery.setClassInfos(classInfoService.listAll());
-    //    singletonQuery.setPredictorInfo(predictorInfoService.listAll());
-
-    List<ClassInfo> classInfos = classInfoService.listAll();
-    List<PredictorInfo> predictorInfos = predictorInfoService.listAll();
-    model.addAttribute("classes", classInfos);
-    model.addAttribute("predictors", predictorInfos);
-
-    model.addAttribute("singleton", new SingletonQuery());
+    model.addAttribute("testPathHdfs", new RenewModelHdfsFormRequest());
     model.addAttribute("trainFile", new TrainFile());
+    model.addAttribute("availableDirs", hdfsService.listInputDirOnPath());
 
     return LAYOUTS_ADMIN;
   }
@@ -194,8 +191,6 @@ public class TestingController {
   @RequestMapping(value = "/predict-new-case", method = RequestMethod.GET)
   public String predictNewCase(Model model) {
     model.addAttribute("view", "predict-new-case");
-    //    singletonQuery.setClassInfos(classInfoService.listAll());
-    //    singletonQuery.setPredictorInfo(predictorInfoService.listAll());
     List<ClassInfo> classInfos = classInfoService.listAll();
     List<PredictorInfo> predictorInfos = predictorInfoService.listAll();
     model.addAttribute("classes", classInfos);
@@ -205,19 +200,51 @@ public class TestingController {
     return LAYOUTS_ADMIN;
   }
 
+  @RequestMapping(value = "/files-from-hdfs",
+      method = RequestMethod.POST)
+  public String trainFileFromHdfs(RenewModelHdfsFormRequest modelHdfs,
+      RedirectAttributes redirectAttributes) throws Exception {
+    if (modelHdfs == null || modelHdfs.getModelHdfs().equals("null")) {
+      redirectAttributes.addFlashAttribute("danger", "Failed to retrieve file from HDFS.");
+      return "redirect:" + ABSOLUTE_PATH;
+    }
+    Pair<List<BufferedReader>, BufferedReader> pair =
+        hdfsService.getListOfOutputModelBufferedReaderFromModelHdfs(
+            modelHdfs.getModelHdfs());
+    if (pair.getFirst() == null || pair.getFirst().size() <= 0) {
+      redirectAttributes.addFlashAttribute("danger", "Failed retrive file from HDFS");
+      return "redirect:" + ABSOLUTE_PATH;
+    }
+    return this.trainFilesEncapsuled(pair.getFirst(), pair.getSecond(), redirectAttributes);
+  }
+
   @RequestMapping(value = "/files",
       method = RequestMethod.POST)
   public String trainFiles(TrainFile trainFile, RedirectAttributes redirectAttributes)
       throws Exception {
+    BufferedReader br1 = new BufferedReader(
+        new InputStreamReader(trainFile.getFileTesting()[0].getInputStream()));
+    BufferedReader br2 = new BufferedReader(
+        new InputStreamReader(trainFile.getFileInfo()[0].getInputStream()));
+    List<BufferedReader> br1s = new ArrayList<>();
+    br1s.add(br1);
+    return this.trainFilesEncapsuled(br1s, br2, redirectAttributes);
+  }
 
+  /**
+   * @param br2 Info File
+   * @param br1s Array of File Test
+   */
+  public String trainFilesEncapsuled(List<BufferedReader> br1s, BufferedReader br2,
+      RedirectAttributes redirectAttributes) {
     errorRateService.resetAll();
     confusionMatrixLastService.deleteAll();
 
     HashMap<String, ConfusionMatrix> confusionEachClassz = new HashMap<String, ConfusionMatrix>();
     ArrayList<HashMap<String, String>> resultPerClasses = new ArrayList<HashMap<String, String>>();
 
-    BufferedReader br2 = new BufferedReader(
-        new InputStreamReader(trainFile.getFiles()[1].getInputStream()));
+//    BufferedReader br2 = new BufferedReader(
+//        new InputStreamReader(trainFile.getFiles()[1].getInputStream()));
     /**
      * attributeInfo = [Index,ClassName|Type]
      * */
@@ -239,37 +266,39 @@ public class TestingController {
       });
     });
 //    logger.info(attributeInfos.toString());
-    BufferedReader br1 =
-        new BufferedReader(new InputStreamReader(trainFile.getFiles()[0].getInputStream()));
-    br1.lines().forEach(s -> {
-      SingletonQuery singletonQuery = new SingletonQuery();
-      List<String> classInfos = new ArrayList<String>();
-      List<String> predictorInfos = new ArrayList<String>();
-      String[] in = s.split(",");
-      for (int i = 0; i < in.length; i++) {
-        String attrInfo = attributeInfos.get(i);
+//    BufferedReader br1 =
+//        new BufferedReader(new InputStreamReader(trainFile.getFiles()[0].getInputStream()));
+    br1s.forEach(br1 -> {
+      br1.lines().forEach(s -> {
+        SingletonQuery singletonQuery = new SingletonQuery();
+        List<String> classInfos = new ArrayList<String>();
+        List<String> predictorInfos = new ArrayList<String>();
+        String[] in = s.split(",");
+        for (int i = 0; i < in.length; i++) {
+          String attrInfo = attributeInfos.get(i);
 //        logger.info("\nattrInfo:\n" + attrInfo + " : " + attrInfo.split("\\|").length + "\n\n");
-        if (attrInfo != null) {
+          if (attrInfo != null) {
 //          throw new IllegalArgumentException("Null for attributeInfos key=" + i);
-          if (attrInfo.split("\\|").length == 1) {
-            /**
-             * If Class
-             * */
-            classInfos.add(attrInfo + "|" + in[i]);
-          } else {
-            /**
-             * If Predictor
-             * */
-            predictorInfos.add(attrInfo + "|" + in[i]);
+            if (attrInfo.split("\\|").length == 1) {
+              /**
+               * If Class
+               * */
+              classInfos.add(attrInfo + "|" + in[i]);
+            } else {
+              /**
+               * If Predictor
+               * */
+              predictorInfos.add(attrInfo + "|" + in[i]);
+            }
           }
-        }
 
-      }
-      singletonQuery.setClassInfos(classInfos);
-      singletonQuery.setPredictorInfos(predictorInfos);
-      this.trainSingleton(null, singletonQuery, redirectAttributes, confusionEachClassz,
-          resultPerClasses);
+        }
+        singletonQuery.setClassInfos(classInfos);
+        singletonQuery.setPredictorInfos(predictorInfos);
+        this.trainSingleton(null, singletonQuery, redirectAttributes, confusionEachClassz,
+            resultPerClasses);
 //      logger.info("\nsingletonQuery.toString(): \n" + singletonQuery.toString() + "\n\n");
+      });
     });
 
 //    logger.info("\n\nMCZAL:\n" + confusionEachClassz.toString() + "\n\n");

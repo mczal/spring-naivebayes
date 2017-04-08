@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 /**
@@ -91,6 +92,36 @@ public class HdfsServiceImpl implements HdfsService {
       hdfsFileSystem.delete(fileInputPath, true);
     }
     return true;
+  }
+
+  @Override
+  public Pair<List<BufferedReader>, BufferedReader> getListOfOutputModelBufferedReaderFromModelHdfs(
+      String modelHdfs)
+      throws Exception {
+    String infoHdfs = modelHdfs + "/info/";
+    modelHdfs += "/testing/input/";
+    FileSystem fs = FileSystem.get(new URI(HDFS_AUTHORITY), conf);
+//    logger
+//        .info("\n\nHDFS_AUTHORITY + HDFS_PATH + modelHdfs: " + HDFS_AUTHORITY + HDFS_PATH
+//            + modelHdfs + "\n");
+    List<BufferedReader> results = new ArrayList<>();
+    FileStatus[] fileStatus = fs.listStatus(new Path(HDFS_AUTHORITY + HDFS_PATH + modelHdfs));
+    if (fileStatus.length == 0) {
+//      logger.info("ZERO LENGTH OCCURED");
+      return null;
+    }
+    String hdfsFileName = "";
+    for (FileStatus status : fileStatus) {
+      hdfsFileName = status.getPath().toString();
+      Path pt = new Path(hdfsFileName);
+      BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(pt)));
+      results.add(br);
+    }
+
+    Path ptInfo = new Path(HDFS_AUTHORITY + HDFS_PATH + infoHdfs + "meta.info");
+    BufferedReader brInfo = new BufferedReader(new InputStreamReader(fs.open(ptInfo)));
+
+    return Pair.of(results, brInfo);
   }
 
   @Override
@@ -201,7 +232,7 @@ public class HdfsServiceImpl implements HdfsService {
     FileSystem hdfsFileSystem = FileSystem.get(new URI(HDFS_AUTHORITY), conf);
 
     AtomicInteger totalLinesAtomic = new AtomicInteger(0);
-    logger.info("totalLines: " + totalLines);
+//    logger.info("totalLines: " + totalLines);
 
     /**
      * WRITE INPUT FILE

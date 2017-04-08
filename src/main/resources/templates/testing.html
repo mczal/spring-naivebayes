@@ -14,76 +14,9 @@
     <!--renew-model-local-->
 
     <div class="row">
-      <!-- TO BE DELETED -->
-      <!--<div class="col-sm-5 col-md-5 col-lg-5">-->
-      <!--<h4>Singleton Query</h4>-->
-      <!--<hr/>-->
-      <!--<form id="singletonForm" class="form-horizontal" th:object="${singleton}"-->
-      <!--method="post"-->
-      <!--th:action="@{/admin/testing/singleton}">-->
-
-      <!--<h5>Predictors</h5>-->
-      <!--<div class="row" th:each="predictor : ${predictors}">-->
-      <!--<div class="form-group">-->
-      <!--<label class="col-sm-2 control-label"-->
-      <!--th:text="${predictor.predictorName}"></label>-->
-      <!--<div class="col-sm-6">-->
-      <!--<select required="required"-->
-      <!--th:if="${#strings.contains(predictor.type,'DISCRETE')}"-->
-      <!--class="form-control" th:field="*{predictorInfos}">-->
-      <!--<option th:each="predictorInfoDetail : ${predictor.predictorInfoDetails}"-->
-      <!--th:text="${predictorInfoDetail.value}"-->
-      <!--th:value="${predictor.type}+'|'+${predictor.predictorName}+'|'+${predictorInfoDetail.value}"></option>-->
-      <!--</select>-->
-      <!--<input required="required"-->
-      <!--th:class="'numericSingletonIn form-control'"-->
-      <!--th:placeholder="${predictor.predictorName}"-->
-      <!--th:if="${#strings.contains(predictor.type,'NUMERIC')}"-->
-      <!--type="text" th:field="*{predictorInfos}"/>-->
-      <!--&lt;!&ndash;<input type="text" class="form-control" th:field="*{shippingCode}"/>&ndash;&gt;-->
-      <!--&lt;!&ndash;<span class="form-control" disabled="disabled"&ndash;&gt;-->
-      <!--&lt;!&ndash;th:text="${user.username} + ' / ' + ${user.email}"&ndash;&gt;-->
-      <!--&lt;!&ndash;style="text-align:center;"/>&ndash;&gt;-->
-      <!--</div>-->
-      <!--</div>-->
-      <!--</div>-->
-
-      <!--<h5>Classes</h5>-->
-      <!--<div class="row" th:each="classz : ${classes}">-->
-      <!--<div class="form-group">-->
-      <!--&lt;!&ndash;th:class="${#fields.hasErrors('shippingCode')} ? 'form-group has-error' : 'form-group'"&ndash;&gt;-->
-      <!--<label class="col-sm-2 control-label"-->
-      <!--th:text="${classz.className}"></label>-->
-      <!--<div class="col-sm-6">-->
-      <!--<select class="form-control" th:field="*{classInfos}">-->
-      <!--<option th:each="classInfoDetail : ${classz.classInfoDetails}"-->
-      <!--th:text="${classInfoDetail.value}"-->
-      <!--th:value="${classz.className}+'|'+${classInfoDetail.value}"></option>-->
-      <!--</select>-->
-      <!--&lt;!&ndash;<input type="text" class="form-control" th:field="*{shippingCode}"/>&ndash;&gt;-->
-      <!--&lt;!&ndash;<span class="form-control" disabled="disabled"&ndash;&gt;-->
-      <!--&lt;!&ndash;th:text="${user.username} + ' / ' + ${user.email}"&ndash;&gt;-->
-      <!--&lt;!&ndash;style="text-align:center;"/>&ndash;&gt;-->
-      <!--</div>-->
-      <!--</div>-->
-      <!--</div>-->
-
-      <!--<div class="row">-->
-      <!--<div class="form-group">-->
-      <!--<div class="col-sm-offset-2 col-sm-3">-->
-      <!--<button type="submit" class="btn btn-success">Submit</button>-->
-      <!--</div>-->
-      <!--</div>-->
-      <!--</div>-->
-
-      <!--</form>-->
-      <!--</div>-->
-      <!-- TO BE DELETED -->
-
-      <div class="col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-5 col-lg-offset-1 col-lg-5">
-        <h4>Testing Files</h4>
+      <div class="col-sm-5 col-md-5 col-lg-5">
+        <h4>Testing Files From Local</h4>
         <hr/>
-
         <form class="form-horizontal" th:object="${trainFile}" method="post"
               th:action="@{/admin/testing/files}" enctype="multipart/form-data">
 
@@ -91,7 +24,7 @@
             <!--th:class="${#fields.hasErrors('files')} ? 'form-group has-error' : 'form-group'"-->
             <label class="col-sm-3 control-label">Testing File:</label>
             <div class="col-sm-9">
-              <input type="file" class="form-control" th:field="*{files}"/>
+              <input type="file" class="form-control" th:field="*{fileTesting}"/>
             </div>
           </div>
 
@@ -99,7 +32,7 @@
             <!--th:class="${#fields.hasErrors('files')} ? 'form-group has-error' : 'form-group'"-->
             <label class="col-sm-3 control-label">Testing-Info File:</label>
             <div class="col-sm-9">
-              <input type="file" class="form-control" th:field="*{files}"/>
+              <input type="file" class="form-control" th:field="*{fileInfo}"/>
             </div>
           </div>
           <!--</div>-->
@@ -115,6 +48,38 @@
 
         </form>
 
+      </div>
+
+      <div class="col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-5 col-lg-offset-1 col-lg-5">
+        <h4>Testing Files From HDFS</h4>
+        <hr/>
+
+        <form class="form-horizontal" th:object="${testPathHdfs}" method="post"
+              th:action="@{/admin/testing/files-from-hdfs}" enctype="multipart/form-data">
+
+          <div class="form-group">
+            <!--th:class="${#fields.hasErrors('files')} ? 'form-group has-error' : 'form-group'"-->
+            <label class="col-sm-3 control-label">Testing File Path (HDFS):</label>
+            <div class="col-sm-9">
+              <select id="ModelDirSelect" class="form-control" th:field="*{modelHdfs}">
+                <option value="null">== Not Selected ==</option>
+                <div th:each="dir : ${availableDirs}">
+                  <option th:value="${dir}" th:inline="text">/bayes/[[${dir}]]</option>
+                </div>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group">
+              <div class="col-sm-3 col-sm-offset-4">
+                <button type="submit" class="btn btn-success">Submit
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </form>
       </div>
     </div>
   </div>
