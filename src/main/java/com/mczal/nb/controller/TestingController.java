@@ -43,10 +43,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * Created by Gl552 on 2/11/2017.
  */
 @Controller
-@RequestMapping(TrainingController.ABSOLTE_PATH)
-public class TrainingController {
+@RequestMapping(TestingController.ABSOLUTE_PATH)
+public class TestingController {
 
-  public static final String ABSOLTE_PATH = "/admin/testing";
+  public static final String ABSOLUTE_PATH = "/admin/testing";
 
   private static final String LAYOUTS_ADMIN = "layouts/admin";
 
@@ -146,9 +146,26 @@ public class TrainingController {
         recall.setOperation(recallOperation);
         recall.setResult(recallResult);
         recall.setClassInfoDetail(classInfoDetail);
+
+        /**
+         * F Measure
+         * */
+        ErrorRate fMeasure = new ErrorRate();
+        double alpha = (2.0 * precisionResult * recallResult) / (precisionResult + recallResult);
+        String fMeasureOperation =
+            "{1 \\over { " + String.format("%.2f", alpha) + " {1 \\over P}+(1- " + String
+                .format("%.2f", alpha) + " ) {1 \\over R} }}";
+        double fMeasureResult = 1 /
+            ((alpha * (1 / precisionResult)) + ((1 - alpha) * (1 / recallResult)));
+        fMeasure.setType(ErrorType.F_MEASURE);
+        fMeasure.setOperation(fMeasureOperation);
+        fMeasure.setResult(fMeasureResult);
+        fMeasure.setClassInfoDetail(classInfoDetail);
+
         try {
           errorRateService.save(precision);
           errorRateService.save(recall);
+          errorRateService.save(fMeasure);
         } catch (Exception e) {
           e.printStackTrace();
         }
@@ -171,6 +188,20 @@ public class TrainingController {
     model.addAttribute("singleton", new SingletonQuery());
     model.addAttribute("trainFile", new TrainFile());
 
+    return LAYOUTS_ADMIN;
+  }
+
+  @RequestMapping(value = "/predict-new-case", method = RequestMethod.GET)
+  public String predictNewCase(Model model) {
+    model.addAttribute("view", "predict-new-case");
+    //    singletonQuery.setClassInfos(classInfoService.listAll());
+    //    singletonQuery.setPredictorInfo(predictorInfoService.listAll());
+    List<ClassInfo> classInfos = classInfoService.listAll();
+    List<PredictorInfo> predictorInfos = predictorInfoService.listAll();
+    model.addAttribute("classes", classInfos);
+    model.addAttribute("predictors", predictorInfos);
+
+    model.addAttribute("singleton", new SingletonQuery());
     return LAYOUTS_ADMIN;
   }
 
@@ -236,7 +267,7 @@ public class TrainingController {
       }
       singletonQuery.setClassInfos(classInfos);
       singletonQuery.setPredictorInfos(predictorInfos);
-      this.trainSingleton(singletonQuery, redirectAttributes, confusionEachClassz,
+      this.trainSingleton(null, singletonQuery, redirectAttributes, confusionEachClassz,
           resultPerClasses);
 //      logger.info("\nsingletonQuery.toString(): \n" + singletonQuery.toString() + "\n\n");
     });
@@ -250,7 +281,7 @@ public class TrainingController {
 
   @RequestMapping(value = "/singleton",
       method = RequestMethod.POST)
-  public String trainSingleton(SingletonQuery singletonQuery,
+  public String trainSingleton(Model model, SingletonQuery singletonQuery,
       RedirectAttributes redirectAttributes, HashMap<String, ConfusionMatrix> confusionEachClassz,
       ArrayList<HashMap<String, String>> resultPerClasses) {
 
@@ -501,7 +532,19 @@ public class TrainingController {
     });
 
     redirectAttributes.addFlashAttribute("success", "Complete test NB-Classifier");
-    return "redirect:" + ErrorRateController.ABSOLUTE_PATH;
+//    return "redirect:" + ErrorRateController.ABSOLUTE_PATH;
+    if (model != null) {
+//      redirectAttributes.addAttribute("view", "predict-new-case")
+//      model.addAttribute("view", "predict-new-case");
+      redirectAttributes.addFlashAttribute("results", resultPerClass);
+//      model.addAttribute("results", resultPerClasses);
+    }
+    logger.info("\n\nsingletonQuery.toString() -> \n"
+        + "" + singletonQuery.toString() + "\n");
+    logger.info("\n\nresultPerClass.toString() -> \n"
+        + "" + resultPerClass.toString() + "\n");
+//    return LAYOUTS_ADMIN;
+    return "redirect:" + ABSOLUTE_PATH + "/predict-new-case";
   }
 
 }

@@ -2,24 +2,28 @@ package com.mczal.nb.controller;
 
 import com.mczal.nb.dto.RenewModelLocalForm;
 import com.mczal.nb.model.BayesianModel;
+import com.mczal.nb.model.util.Type;
 import com.mczal.nb.service.BayesianModelService;
 import com.mczal.nb.service.ClassInfoService;
 import com.mczal.nb.service.ConfusionMatrixLastService;
 import com.mczal.nb.service.ErrorRateService;
 import com.mczal.nb.service.PredictorInfoService;
+import com.mczal.nb.utils.McnBasePageWrapper;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -30,7 +34,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class HomeController {
 
   private final static String LAYOUTS_ADMIN = "layouts/admin";
-
+  private static final String DEFAULT_PAGE_SIZE = "10";
+  private static final String DEFAULT_PAGE_NUMBER = "0";
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
@@ -49,27 +54,36 @@ public class HomeController {
   private ErrorRateService errorRateService;
 
   @RequestMapping("/home")
-  public String index(Model model) {
+  public String index(Model model,
+      @RequestParam(required = false, defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
+      @RequestParam(required = false, defaultValue = DEFAULT_PAGE_SIZE) Integer size)
+      throws Exception {
     model.addAttribute("view", "dashboard");
-
     model.addAttribute("classes", classInfoService.listAll());
     model.addAttribute("predictors", predictorInfoService.listAll());
-    List<BayesianModel> bayesianModels = bayesianModelService.listAll();
-    List<BayesianModel> discreteModels = new ArrayList<>();
-    List<BayesianModel> numericModels = new ArrayList<>();
-    bayesianModels.stream().forEach(bayesianModel -> {
-      switch (bayesianModel.getType()) {
-        case DISCRETE:
-          discreteModels.add(bayesianModel);
-          break;
-        case NUMERIC:
-          numericModels.add(bayesianModel);
-          break;
-        default:
-          break;
-      }
-    });
-    model.addAttribute("discreteModels", discreteModels);
+//    List<BayesianModel> bayesianModels = bayesianModelService.listAll();
+
+    Page<BayesianModel> discreteModels = bayesianModelService
+        .findByType(Type.DISCRETE, new PageRequest(page, size));
+    List<BayesianModel> numericModels = bayesianModelService.findByType(Type.NUMERIC);
+
+    McnBasePageWrapper<BayesianModel> pageWrapper = new McnBasePageWrapper<>(discreteModels,
+        "/admin/home");
+    model.addAttribute("page", pageWrapper);
+
+    //    bayesianModels.stream().forEach(bayesianModel -> {
+//      switch (bayesianModel.getType()) {
+//        case DISCRETE:
+//          discreteModels.add(bayesianModel);
+//          break;
+//        case NUMERIC:
+//          numericModels.add(bayesianModel);
+//          break;
+//        default:
+//          break;
+//      }
+//    });
+//    model.addAttribute("discreteModels", discreteModels);
     model.addAttribute("numericModels", numericModels);
 
     return LAYOUTS_ADMIN;

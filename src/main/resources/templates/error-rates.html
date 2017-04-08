@@ -9,14 +9,24 @@
 <h2 th:fragment="header">
   Error Rate
 </h2>
-<section th:fragment="content" class="content">
+<section th:fragment="content" class="content" id="TOP">
+
+  <div class="header-class">
+    <p th:each="clazz : ${confusionMatrices}">
+      <a th:href="'#_'+${clazz.className}" class="btn btn-success" th:inline="text">[[${clazz.className}]]</a>
+    </p>
+  </div>
+
+  <a href="#TOP" style="position:fixed;right:50px;bottom:50px;"
+     class="btn btn-primary"><i class="fa fa-hand-pointer-o fa-4"></i></a>
+
   <div class="row">
     <div class="col-sm-offset-1 col-sm-10">
       <div class="panel panel-default" th:each="confusionMatrix : ${confusionMatrices}">
         <div class="panel-heading">Created Date : <strong style="color: maroon;"><span
             th:text="${#dates.format(confusionMatrix.createdDate, 'EEEE, dd-MMMM-yyyy hh:mm:ss a')}"></span></strong>
         </div>
-        <div class="panel-body">
+        <div th:attr="id='_'+${confusionMatrix.className}" class="panel-body">
           <h4 th:text="'Results for '+${confusionMatrix.className}"></h4>
 
           <h5 th:inline="text">Confusion Matrix For Class <i>"[[${confusionMatrix.className}]]"</i>
@@ -51,8 +61,8 @@
             <div class="row">
               <h5 th:inline="text">For value = [[${classInfoDetail.value}]]</h5>
               <div th:each="error : ${classInfoDetail.errorRates}">
-                <div class="col-sm-offset-1 col-sm-3 text-center">
-                  <span th:inline="text">[[${error.type}]]</span>
+                <div class="col-sm-offset-1 col-sm-5 text-center">
+                  <strong><span th:inline="text">[[${error.type}]]</span></strong>
                   <br/>
                   <span
                       th:inline="text">$$ { [[${error.operation}]] } = [[${error.result}]] $$</span>
@@ -211,13 +221,11 @@
         <div class="panel-body">
           <span>$$ \alpha = {coefficient}$$</span>
           <span>$$ \alpha = {2PR \over P + R}$$</span>
-          <span>$$F = {1 \over {\alpha{1 \over P}+(1-\alpha) {1 \over R} }}.$$</span>
+          <span>$$F = {1 \over {\alpha{1 \over P}+(1-\alpha) {1 \over R} }}$$</span>
         </div>
       </div>
     </div>
-
   </div>
-
 </section>
 </body>
 </html>
