@@ -33,11 +33,21 @@ public class TrainUtils {
 //    double pemangkat = ((Math.pow(x - mean, 2)) * -1.0 / (2.0 * Math.pow(sigma, 2)));
 //    return (1 / divisor) * (Math.pow(Math.E, pemangkat));
 
+    String debugSec = "\n"
+        + "x=" + x + "\n"
+        + "mean=" + mean + "\n"
+        + "sigma=" + sigma + "\n";
     double divisor = Math.sqrt(2.0 * Math.PI * sigma);
+    debugSec += "divisor=" + divisor + "\n";
     double powerDividend = Math.pow((x - mean), 2) * -1;
+    debugSec += "powerDividend=" + powerDividend + "\n";
     double powerDivisor = 2.0 * Math.pow(sigma, 2);
+    debugSec += "powerDivisor=" + powerDivisor + "\n";
     double resPower = powerDividend / powerDivisor;
+    debugSec += "resPower=" + resPower + "\n";
     double currRes = (1 / divisor) * (Math.pow(Math.E, resPower));
+    debugSec += "currRes=" + currRes + "\n";
+//    logger.info(debugSec + "\n");
     return currRes;
   }
 
@@ -109,8 +119,8 @@ public class TrainUtils {
     }
     double currSigma = bayesianModel.getSigma().doubleValue();
     double currMean = bayesianModel.getMean().doubleValue();
-    double res = calcNormalDist(currMean, currSigma, x);
-    return res;
+    return calcNormalDist(currMean, currSigma, x);
+
     //    DecimalFormat df = new DecimalFormat("#.00");
     //    df.setRoundingMode(RoundingMode.HALF_UP);
     //    return classInfo.getClassName() + "|" + classInfoDetail.getValue() + "|" + df.format(res);

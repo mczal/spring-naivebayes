@@ -94,5 +94,27 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript" th:fragment="custom_javascript">
+  /*<![CDATA[*/
+  window.onload = function () {
+    document.getElementById('singletonForm').onsubmit = function (e) {
+      e.preventDefault();
+      var numszz = document.getElementsByClassName('numericSingletonIn');
+      console.log("NUMZ", numszz);
+      for (var indeks = 0; indeks < numszz.length; indeks++) {
+        var numOne = numszz.item(indeks);
+        console.log("numOne", numOne);
+        var placehold = numOne.getAttribute('placeholder');
+        console.log("placehold", placehold);
+        numOne.value = 'NUMERIC|' + placehold + '|' + numOne.value;
+        console.log("numOne Updated", numOne);
+        console.log("numOne Updated Value", numOne.value);
+      }
+      this.submit();
+    };
+  };
+  /*]]>*/
+</script>
 </body>
 </html>

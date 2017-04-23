@@ -313,6 +313,7 @@ public class TestingController {
   public String trainSingleton(Model model, SingletonQuery singletonQuery,
       RedirectAttributes redirectAttributes, HashMap<String, ConfusionMatrix> confusionEachClassz,
       ArrayList<HashMap<String, String>> resultPerClasses) {
+//    logger.info("MASUK BRO");
 
     List<ClassInfo> classInfos = classInfoService.listAll();
 
@@ -376,7 +377,11 @@ public class TestingController {
         outer:
         for (String s : singletonQuery.getPredictorInfos()) {
           s = s.trim();
-          if (s.split("\\|")[0].trim().equals("DISCRETE")) {
+//          logger.info("\ns = " + s);
+          String type = s.split("\\|")[0].trim();
+//          logger.info("type=" + type);
+          if (type.equalsIgnoreCase("DISCRETE")) {
+//            logger.info("Discrete Bro");
             Pair<Double, Double> pairRes = trainUtils.calcDiscrete(classInfo, classInfoDetail, s);
             if (pairRes == null) {
               flag = 1;
@@ -390,8 +395,8 @@ public class TestingController {
 //                + "=> accCurrPredRes " + currPredRes * (dividend / divisor));
             currPredRes *= (dividend / divisor);
             //              logger.info("\nMCZAL: currPredRes => " + currPredRes + "\n");
-          } else if (s.split("\\|")[0].trim().equals("NUMERIC") || s.split("\\|")[0].trim()
-              .equals("NUMERICAL")) {
+          } else if (type.equalsIgnoreCase("NUMERIC") || type.equalsIgnoreCase("NUMERICAL")) {
+//            logger.info("Numeric Bro");
             double res = trainUtils.calcNormDistEachClass(classInfo, classInfoDetail, s);
             if (res == -1.0) {
               throw new IllegalArgumentException("RES = " + res);
@@ -403,6 +408,8 @@ public class TestingController {
 //                    + currPredRes * res
 //                    + "\n-----\n");
             currPredRes *= res;
+          } else {
+            throw new IllegalArgumentException("NO SUCH TYPE = " + type);
           }
 
         }
