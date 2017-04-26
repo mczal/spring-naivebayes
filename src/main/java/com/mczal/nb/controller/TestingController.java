@@ -433,19 +433,32 @@ public class TestingController {
        * Format :
        * maxS  => ClassName,ClassVal|Result
        * */
-      String maxS = "";
-      double checker = Double.MIN_VALUE;
+//      String maxS = "";
+//      double checker = Double.MIN_VALUE;
       double divisorNorm = 0.0;
+      double checker = Double.parseDouble(allPredRes.get(0).split("\\|")[1]);
+      String maxS = allPredRes.get(0);
 //      logger.info("\nAllPredRes.size(): " + allPredRes.size());
-      for (String s : allPredRes) {
-//        logger.info("\nString s  from allPredRes : " + s);
-        divisorNorm += Double.parseDouble(s.split("\\|")[1]);
+
+      for (int i = 1; i < allPredRes.size(); i++) {
+        divisorNorm += Double.parseDouble(allPredRes.get(i).split("\\|")[1]);
 //        logger.info("\n" + Double.parseDouble(s.split("\\|")[1]) + " > " + checker);
-        if (Double.parseDouble(s.split("\\|")[1]) > checker) {
-          checker = Double.parseDouble(s.split("\\|")[1]);
-          maxS = s;
+        if (Double.parseDouble(allPredRes.get(i).split("\\|")[1]) > checker) {
+          checker = Double.parseDouble(allPredRes.get(i).split("\\|")[1]);
+          maxS = allPredRes.get(i);
         }
       }
+
+//      for (String s : allPredRes) {
+////        logger.info("\nString s  from allPredRes : " + s);
+//        divisorNorm += Double.parseDouble(s.split("\\|")[1]);
+////        logger.info("\n" + Double.parseDouble(s.split("\\|")[1]) + " > " + checker);
+//        if (Double.parseDouble(s.split("\\|")[1]) > checker) {
+//          checker = Double.parseDouble(s.split("\\|")[1]);
+//          maxS = s;
+//        }
+//      }
+
 //      logger.info("\nmaxS: " + maxS);
       String maxSNorm = maxS.split(",")[0] + "," + maxS.split(",")[1].split("\\|")[0];
 //      logger.info("maxSNorm: " + maxSNorm);
