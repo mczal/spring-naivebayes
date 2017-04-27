@@ -435,16 +435,17 @@ public class TestingController {
        * */
 //      String maxS = "";
 //      double checker = Double.MIN_VALUE;
-      double divisorNorm = 0.0;
-      double checker = Double.parseDouble(allPredRes.get(0).split("\\|")[1]);
+      double divisorNorm = Double.parseDouble(allPredRes.get(0).split("\\|")[1]);
+      double checker = divisorNorm;
       String maxS = allPredRes.get(0);
 //      logger.info("\nAllPredRes.size(): " + allPredRes.size());
 
       for (int i = 1; i < allPredRes.size(); i++) {
-        divisorNorm += Double.parseDouble(allPredRes.get(i).split("\\|")[1]);
+        double numeric = Double.parseDouble(allPredRes.get(i).split("\\|")[1]);
+        divisorNorm += numeric;
 //        logger.info("\n" + Double.parseDouble(s.split("\\|")[1]) + " > " + checker);
-        if (Double.parseDouble(allPredRes.get(i).split("\\|")[1]) > checker) {
-          checker = Double.parseDouble(allPredRes.get(i).split("\\|")[1]);
+        if (numeric > checker) {
+          checker = numeric;
           maxS = allPredRes.get(i);
         }
       }
