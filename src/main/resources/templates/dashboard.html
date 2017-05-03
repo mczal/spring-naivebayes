@@ -181,7 +181,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="num : ${numericModels}">
+            <tr th:each="num : ${pageNum.page.content}">
               <td th:text="${num.id}">Id</td>
               <td th:text="${num.predictorName}">p_n</td>
               <td th:text="${num.className}">p_v</td>
@@ -191,6 +191,12 @@
             </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-offset-5 col-offset-md-5 col-sm-4 col-md-4">
+          <a th:href="@{/admin/home/numeric}" class="btn btn-primary">See more...</a>
         </div>
       </div>
 
@@ -209,7 +215,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="disc : ${page.page.content}">
+            <tr th:each="disc : ${pageDisc.page.content}">
               <td th:text="${disc.id}">Id</td>
               <td th:text="${disc.predictorName}">p_n</td>
               <td th:text="${disc.predVal}">p_v</td>
@@ -219,21 +225,12 @@
             </tr>
             </tbody>
           </table>
+        </div>
+      </div>
 
-          <!-- Pagination Bar -->
-          <div class="row">
-            <div class="pagination" th:replace="layouts/pagination :: paginationbar">
-              <ul>
-                <li><a href='#'>Prev</a></li>
-                <li><a href='#'>1</a></li>
-                <li><a href='#'>2</a></li>
-                <li><a href='#'>3</a></li>
-                <li><a href='#'>4</a></li>
-                <li><a href='#'>5</a></li>
-                <li><a href='#'>Next</a></li>
-              </ul>
-            </div>
-          </div>
+      <div class="row">
+        <div class="col-sm-offset-5 col-offset-md-5 col-sm-4 col-md-4">
+          <a th:href="@{/admin/home/discrete}" class="btn btn-primary">See more...</a>
         </div>
       </div>
 

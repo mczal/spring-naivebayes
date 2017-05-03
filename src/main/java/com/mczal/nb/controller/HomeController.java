@@ -13,7 +13,6 @@ import com.mczal.nb.service.hdfs.HdfsService;
 import com.mczal.nb.utils.McnBasePageWrapper;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.validation.Valid;
 import org.slf4j.Logger;
@@ -37,7 +36,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class HomeController {
 
   private final static String LAYOUTS_ADMIN = "layouts/admin";
-  private static final String DEFAULT_PAGE_SIZE = "10";
+  private static final String DEFAULT_PAGE_SIZE = "20";
   private static final String DEFAULT_PAGE_NUMBER = "0";
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -110,23 +109,25 @@ public class HomeController {
   }
 
   @RequestMapping("/home")
-  public String index(Model model,
-      @RequestParam(required = false, defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
-      @RequestParam(required = false, defaultValue = DEFAULT_PAGE_SIZE) Integer size)
-      throws Exception {
+  public String index(Model model
+  ) throws Exception {
     model.addAttribute("view", "dashboard");
     model.addAttribute("classes", classInfoService.listAll());
     model.addAttribute("predictors", predictorInfoService.listAll());
 //    List<BayesianModel> bayesianModels = bayesianModelService.listAll();
 
     Page<BayesianModel> discreteModels = bayesianModelService
-        .findByType(Type.DISCRETE, new PageRequest(page, size));
-    List<BayesianModel> numericModels = bayesianModelService.findByType(Type.NUMERIC);
+        .findByType(Type.DISCRETE, new PageRequest(0, 10));
+    Page<BayesianModel> numericModels = bayesianModelService
+        .findByType(Type.NUMERIC, new PageRequest(0, 10));
+//    List<BayesianModel> numericModels = bayesianModelService.findByType(Type.NUMERIC);
 
     McnBasePageWrapper<BayesianModel> pageWrapper = new McnBasePageWrapper<>(discreteModels,
         "/admin/home");
-    model.addAttribute("page", pageWrapper);
+    model.addAttribute("pageDisc", pageWrapper);
 
+    McnBasePageWrapper<BayesianModel> pageWrapperNums = new McnBasePageWrapper<>(numericModels,
+        "/admin/home");
     //    bayesianModels.stream().forEach(bayesianModel -> {
 //      switch (bayesianModel.getType()) {
 //        case DISCRETE:
@@ -140,8 +141,41 @@ public class HomeController {
 //      }
 //    });
 //    model.addAttribute("discreteModels", discreteModels);
-    model.addAttribute("numericModels", numericModels);
+    model.addAttribute("pageNum", pageWrapperNums);
 
+    return LAYOUTS_ADMIN;
+  }
+
+  @RequestMapping(value = "/home/discrete")
+  public String indexDiscrete(Model model,
+      @RequestParam(required = false, defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
+      @RequestParam(required = false, defaultValue = DEFAULT_PAGE_SIZE) Integer size)
+      throws Exception {
+
+    Page<BayesianModel> discreteModels = bayesianModelService
+        .findByType(Type.DISCRETE, new PageRequest(page, size));
+//    List<BayesianModel> numericModels = bayesianModelService.findByType(Type.NUMERIC);
+
+    McnBasePageWrapper<BayesianModel> pageWrapper = new McnBasePageWrapper<>(discreteModels,
+        "/admin/home");
+    model.addAttribute("page", pageWrapper);
+    model.addAttribute("view", "dashboard-discrete");
+    return LAYOUTS_ADMIN;
+  }
+
+  @RequestMapping(value = "/home/numeric")
+  public String indexNumeric(Model model,
+      @RequestParam(required = false, defaultValue = DEFAULT_PAGE_NUMBER) Integer page,
+      @RequestParam(required = false, defaultValue = DEFAULT_PAGE_SIZE) Integer size)
+      throws Exception {
+    Page<BayesianModel> numericModels = bayesianModelService
+        .findByType(Type.NUMERIC, new PageRequest(page, size));
+//    List<BayesianModel> numericModels = bayesianModelService.findByType(Type.NUMERIC);
+
+    McnBasePageWrapper<BayesianModel> pageWrapper = new McnBasePageWrapper<>(numericModels,
+        "/admin/home");
+    model.addAttribute("page", pageWrapper);
+    model.addAttribute("view", "dashboard-numeric");
     return LAYOUTS_ADMIN;
   }
 

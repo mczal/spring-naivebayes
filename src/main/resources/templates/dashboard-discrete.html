@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Title</title>
+</head>
+<body>
+<h2 th:fragment="header">Dashboard - Numeric</h2>
+<div class="content" th:fragment="content">
+
+  <div class="row">
+    <div class="col-sm-offset-1 col-sm-11 col-md-offset-1 col-md-11 col-lg-offset-1 col-lg-11">
+      <h4 class="text-center">Discrete</h4>
+      <table class="table table-condensed table-bordered">
+        <thead>
+        <tr class="persist-header">
+          <th>Id</th>
+          <th>p_n</th>
+          <th>p_v</th>
+          <th>c_n</th>
+          <th>c_v</th>
+          <th>count</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="disc : ${page.page.content}">
+          <td th:text="${disc.id}">Id</td>
+          <td th:text="${disc.predictorName}">p_n</td>
+          <td th:text="${disc.predVal}">p_v</td>
+          <td th:text="${disc.className}">c_n</td>
+          <td th:text="${disc.classVal}">c_v</td>
+          <td th:text="${disc.count}">count</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Pagination Bar -->
+  <div class="row">
+    <div class="pagination" th:replace="layouts/pagination :: paginationbar">
+      <ul>
+        <li><a href='#'>Prev</a></li>
+        <li><a href='#'>1</a></li>
+        <li><a href='#'>2</a></li>
+        <li><a href='#'>3</a></li>
+        <li><a href='#'>4</a></li>
+        <li><a href='#'>5</a></li>
+        <li><a href='#'>Next</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</body>
+</html>
