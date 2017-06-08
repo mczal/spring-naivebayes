@@ -25,8 +25,8 @@
               <div class="col-sm-5">
                 <select class="form-control" th:field="*{model}">
                   <option th:each="dir : ${availableDirs}" th:inline="text"
-                          th:value="'bayes/'+${dir}">
-                    bayes/[[${dir}]]
+                          th:value="'/bayes/'+${dir}">
+                    /bayes/[[${dir}]]
                   </option>
                 </select>
               </div>
@@ -57,16 +57,16 @@
         </div>
         <br/>
 
-        <form method="post" th:action="@{/admin/mapreduce-control/testing}">
+        <form method="post" th:action="@{/admin/mapreduce-control/testing}" th:object="${testing}">
 
           <div class="row">
             <div class="form-group form-control-static">
               <label class="col-sm-3 control-label text-left">Choose HDFS Model Directory:</label>
               <div class="col-sm-5">
-                <select class="form-control">
+                <select class="form-control" th:field="*{model}">
                   <option th:each="dir : ${availableDirs}" th:inline="text"
-                          th:value="'bayes/'+${dir}">
-                    bayes/[[${dir}]]
+                          th:value="'/bayes/'+${dir}">
+                    /bayes/[[${dir}]]
                   </option>
                 </select>
               </div>
