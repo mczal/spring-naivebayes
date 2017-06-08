@@ -16,6 +16,15 @@
         class="glyphicon glyphicon-dashboard"></i></span>
   </li>
   <li class="">
+    <a th:href="@{/admin/mapreduce-control}" class="detailed">
+      <span class="title">M-R Control</span>
+      <span class="details">MapReduce Job Control</span>
+    </a>
+    <span
+        th:class="${#strings.contains(view,'mapreduce')} ? 'bg-success icon-thumbnail' : 'icon-thumbnail'"><i
+        class="glyphicon glyphicon-briefcase"></i></span>
+  </li>
+  <li class="">
     <a th:href="@{/admin/input-set}" class="detailed">
       <span class="title">Input Set</span>
       <span class="details">Upload Input File To HDFS</span>

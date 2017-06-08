@@ -12,8 +12,15 @@
 </h2>
 <div class="content" th:fragment="content">
   <div class="container">
+
+    <div class="navbar">
+      <a th:href="@{/admin/input-set/both}" th:class="${#strings.contains(view,'both')} ? 'btn btn-default active' : 'btn btn-default'">Input File and Info</a>
+      <a th:href="@{/admin/input-set/inputonly}" th:class="${#strings.contains(view,'inputonly')} ? 'btn btn-default active' : 'btn btn-default'">Input File Only</a>
+      <a th:href="@{/admin/input-set/infoonly}" th:class="${#strings.contains(view,'infoonly')} ? 'btn btn-default active' : 'btn btn-default'">Change Info</a>
+    </div>
+
     <form class="form-horizontal" method="post" enctype="multipart/form-data"
-          th:object="${inputSet}" th:action="@{/admin/input-set}">
+          th:object="${inputSet}" th:action="@{/admin/input-set/infoonly}">
 
 
       <div class="row">
@@ -61,22 +68,6 @@
 
       <div class="row">
         <div class="form-group">
-          <label class="col-sm-2 control-label">Input File To HDFS:</label>
-          <div class="col-sm-3">
-            <input multiple="multiple" id="FileInput" type="file" class="form-control"
-                   th:field="*{filesInput}"/>
-          </div>
-          <div class="col-sm-4">
-            <span class="form-control" style="font-family: monospace">
-              <span>/bayes/</span><span
-                id="ModelDirInputText">&lsaquo;ModelDir&rsaquo;</span><span>/input</span>
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group">
           <label class="col-sm-2 control-label">Info InfoFile To HDFS:</label>
           <div class="col-sm-3">
             <input id="FileInfo" type="file" class="form-control"
@@ -86,22 +77,6 @@
             <span class="form-control"
                   style="font-family: monospace"><span>/bayes/</span><span
                 id="ModelDirInfoText">&lsaquo;ModelDir&rsaquo;</span><span>/info</span></span>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Data Training : Data Testing</label>
-          <div class="col-sm-1">
-            <input id="PercentageTrain" class="form-control" type="number"
-                   th:field="*{percentage}"/>
-          </div>
-          <div class="col-sm-1 text-center">
-            <span class="form-control">:</span>
-          </div>
-          <div class="col-sm-1">
-            <span id="PercentageTest" class="form-control"></span>
           </div>
         </div>
       </div>

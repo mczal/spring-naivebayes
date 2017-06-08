@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+  <title>Title</title>
+  <link th:src="'https://cdn.jsdelivr.net/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js'"/>
+</head>
+<body>
+<h2 th:fragment="header">
+  Hadoop MapReduce Job Controller
+</h2>
+<div class="content" th:fragment="content">
+
+  <div class="box box-solid" style="background-color: white">
+    <div class="box-body text-left">
+      <div class="container">
+        <div class="box-header">
+          <h3 class="box-title">Run <strong>Training</strong> Module - MapReduce Job</h3>
+        </div>
+        <form method="post" th:action="@{/admin/mapreduce-control/training}"
+              th:object="${training}">
+          <div class="row">
+            <div class="form-group form-control-static">
+              <label class="col-sm-3 control-label text-left">Choose HDFS Model Directory:</label>
+              <div class="col-sm-5">
+                <select class="form-control" th:field="*{model}">
+                  <option th:each="dir : ${availableDirs}" th:inline="text"
+                          th:value="'bayes/'+${dir}">
+                    bayes/[[${dir}]]
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <br/>
+
+          <div class="row">
+            <div class="col-sm-4 col-sm-offset-4">
+              <button type="submit" class="btn btn-success">Run</button>
+            </div>
+          </div>
+
+        </form>
+
+        <div class="row">
+          <div class="col-sm-10">
+            <hr/>
+          </div>
+        </div>
+
+
+        <br/>
+
+        <div class="box-header">
+          <h3 class="box-title">Run <strong>Testing</strong> Module - MapReduce Job</h3>
+        </div>
+        <br/>
+
+        <form method="post" th:action="@{/admin/mapreduce-control/testing}">
+
+          <div class="row">
+            <div class="form-group form-control-static">
+              <label class="col-sm-3 control-label text-left">Choose HDFS Model Directory:</label>
+              <div class="col-sm-5">
+                <select class="form-control">
+                  <option th:each="dir : ${availableDirs}" th:inline="text"
+                          th:value="'bayes/'+${dir}">
+                    bayes/[[${dir}]]
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <br/>
+
+          <div class="row">
+            <div class="col-sm-4 col-sm-offset-4">
+              <button type="submit" class="btn btn-success">Run</button>
+            </div>
+          </div>
+        </form>
+
+        <div class="row">
+          <div class="col-sm-10">
+            <hr/>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
