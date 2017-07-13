@@ -40,4 +40,12 @@ public class SingletonQuery implements Serializable {
     return "SingletonQuery{" + "classInfos=" + classInfos + ", predictorInfos=" + predictorInfos
         + '}';
   }
+
+  public String toStringModifClass() {
+    return "class input= " + classInfos;
+  }
+
+  public String toStringModifPredictor() {
+    return "predictor input= " + predictorInfos;
+  }
 }

@@ -1,231 +1,233 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
-  <title>Title</title>
-  <link th:src="'https://cdn.jsdelivr.net/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js'"/>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <title>Title</title>
+    <link th:src="'https://cdn.jsdelivr.net/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js'"/>
 </head>
 <body>
-<h2 th:fragment="header">
-  Error Rate
+<h2 th:fragment="header" id="TOP">
+    Error Rate
 </h2>
-<section th:fragment="content" class="content" id="TOP">
+<section th:fragment="content" class="content">
 
-  <div class="header-class">
-    <p th:each="clazz : ${confusionMatrices}">
-      <a th:href="'#_'+${clazz.className}" class="btn btn-success" th:inline="text">[[${clazz.className}]]</a>
-    </p>
-  </div>
+    <div class="header-class">
+        <p th:each="clazz : ${confusionMatrices}">
+            <a th:href="'#_'+${clazz.className}" class="btn btn-success" th:inline="text">[[${clazz.className}]]</a>
+        </p>
+    </div>
 
-  <a href="#TOP" style="position:fixed;right:50px;bottom:50px;"
-     class="btn btn-primary"><i class="fa fa-hand-pointer-o fa-4"></i></a>
+    <a href="#TOP" style="position:fixed;right:50px;bottom:50px;"
+       class="btn btn-primary"><i class="fa fa-hand-pointer-o fa-4"></i></a>
 
-  <div class="row">
-    <div class="col-sm-offset-1 col-sm-10">
-      <div class="panel panel-default" th:each="confusionMatrix : ${confusionMatrices}">
-        <div class="panel-heading">Created Date : <strong style="color: maroon;"><span
-            th:text="${#dates.format(confusionMatrix.createdDate, 'EEEE, dd-MMMM-yyyy hh:mm:ss a')}"></span></strong>
-        </div>
-        <div th:attr="id='_'+${confusionMatrix.className}" class="panel-body">
-          <h4 th:text="'Results for '+${confusionMatrix.className}"></h4>
+    <div class="row">
+        <div class="col-sm-offset-1 col-sm-10">
+            <div class="panel panel-default" th:each="confusionMatrix : ${confusionMatrices}">
+                <div class="panel-heading">Created Date : <strong style="color: maroon;"><span
+                        th:text="${#dates.format(confusionMatrix.createdDate, 'EEEE, dd-MMMM-yyyy hh:mm:ss a')}"></span></strong>
+                </div>
+                <div th:attr="id='_'+${confusionMatrix.className}" class="panel-body">
+                    <h4 th:text="'Results for '+${confusionMatrix.className}"></h4>
 
-          <h5 th:inline="text">Confusion Matrix For Class <i>"[[${confusionMatrix.className}]]"</i>
-          </h5>
-          <div class="row">
-            <div class="col-sm-offset-1 col-sm-2">
-              <h5 class="text-center"><i>Predicted</i></h5>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-1">
-              <h5 style="text-align: center"><i>Actual</i></h5>
-            </div>
-            <div class="col-sm-11">
-              <code><strong th:utext="${confusionMatrix.printedConfusionMatrix}"></strong></code>
-            </div>
-          </div>
+                    <h5 th:inline="text">Confusion Matrix For Class <i>"[[${confusionMatrix.className}]]"</i>
+                    </h5>
+                    <div class="row">
+                        <div class="col-sm-offset-1 col-sm-2">
+                            <h5 class="text-center"><i>Predicted</i></h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <h5 style="text-align: center"><i>Actual</i></h5>
+                        </div>
+                        <div class="col-sm-11">
+                            <code><strong
+                                    th:utext="${confusionMatrix.printedConfusionMatrix}"></strong></code>
+                        </div>
+                    </div>
 
-          <hr/>
-          <!--Error Rates-->
-          <div class="row">
-            <div class="col-sm-4">
-              <!--Accuracy-->
-              <h5 th:text="${confusionMatrix.classInfo.accuracy?.type}"></h5>
-              <span th:inline="text">
+                    <hr/>
+                    <!--Error Rates-->
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <!--Accuracy-->
+                            <h5 th:text="${confusionMatrix.classInfo.accuracy?.type}"></h5>
+                            <span th:inline="text">
                 $$ { [[${confusionMatrix.classInfo.accuracy?.operation}]] } = [[${confusionMatrix.classInfo.accuracy?.result}]] $$
               </span>
-            </div>
-          </div>
+                        </div>
+                    </div>
 
-          <div th:each="classInfoDetail : ${confusionMatrix.classInfo.classInfoDetails}">
-            <div class="row">
-              <h5 th:inline="text">For value = [[${classInfoDetail.value}]]</h5>
-              <div th:each="error : ${classInfoDetail.errorRates}">
-                <div class="col-sm-offset-1 col-sm-5 text-center">
-                  <strong><span th:inline="text">[[${error.type}]]</span></strong>
-                  <br/>
-                  <span
-                      th:inline="text">$$ { [[${error.operation}]] } = [[${error.result}]] $$</span>
+                    <div th:each="classInfoDetail : ${confusionMatrix.classInfo.classInfoDetails}">
+                        <div class="row">
+                            <h5 th:inline="text">For value = [[${classInfoDetail.value}]]</h5>
+                            <div th:each="error : ${classInfoDetail.errorRates}">
+                                <div class="col-sm-offset-1 col-sm-5 text-center">
+                                    <strong><span th:inline="text">[[${error.type}]]</span></strong>
+                                    <br/>
+                                    <span
+                                            th:inline="text">$$ { [[${error.operation}]] } = [[${error.result}]] $$</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr/>
+
+                    <div class="row">
+                        <div class="col-sm-offset-5 col-sm-2">
+                            <a class="btn btn-primary"
+                               th:href="@{/admin/error-rate/detail/}+${confusionMatrix.id}">See
+                                Detail</a>
+                        </div>
+                    </div>
+
+                    <!--<div class="row">-->
+                    <!--<div class="col-sm-offset-5 col-sm-2">-->
+                    <!--<button class="btn btn-primary" data-toggle="collapse"-->
+                    <!--th:attr="data-target='#'+${confusionMatrix.id}">-->
+                    <!--See Detail-->
+                    <!--</button>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--<div th:attr="id=${confusionMatrix.id}" class="collapse">-->
+                    <!--<table class="table table-hover">-->
+                    <!--<thead>-->
+                    <!--<tr>-->
+                    <!--<td>Id</td>-->
+                    <!--<td>Actual</td>-->
+                    <!--<td>Predicted</td>-->
+                    <!--<td>Percentage</td>-->
+                    <!--</tr>-->
+                    <!--</thead>-->
+                    <!--<tbody>-->
+                    <!--<div th:each="detail : ${confusionMatrix.confusionMatrixDetails}">-->
+                    <!--<tr>-->
+                    <!--<td th:text="${detail.id}"></td>-->
+                    <!--<td th:text="${detail.actual}"></td>-->
+                    <!--<td th:text="${detail.predicted}"></td>-->
+                    <!--<td th:text="${detail.percentage}"></td>-->
+                    <!--</tr>-->
+                    <!--</div>-->
+                    <!--</tbody>-->
+                    <!--</table>-->
+                    <!--</div>-->
+
                 </div>
-              </div>
             </div>
-          </div>
 
-          <hr/>
+            <!--<table class="table table-hover">-->
+            <!--<thead>-->
+            <!--<tr>-->
+            <!--<th></th>-->
+            <!--<th>True Positive</th>-->
+            <!--<th>True Negative</th>-->
+            <!--<th>False Positive</th>-->
+            <!--<th>False Negative</th>-->
+            <!--</tr>-->
+            <!--</thead>-->
+            <!--<tbody>-->
+            <!--<div th:each="errorRate : ${errorRates}">-->
+            <!--<tr>-->
+            <!--<td th:text="${errorRate.type}"></td>-->
+            <!--<td th:text="${errorRate.truePositive}"></td>-->
+            <!--<td th:text="${errorRate.trueNegative}"></td>-->
+            <!--<td th:text="${errorRate.falsePositive}"></td>-->
+            <!--<td th:text="${errorRate.falseNegative}"></td>-->
+            <!--</tr>-->
+            <!--&lt;!&ndash;<tr th:if="${#strings.contains(errorRate.type,'LAST')}">&ndash;&gt;-->
+            <!--&lt;!&ndash;&ndash;&gt;-->
+            <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+            <!--&lt;!&ndash;<tr th:if="${#strings.contains(errorRate.type,'ACCUMULATIVE')}">&ndash;&gt;-->
 
-          <div class="row">
-            <div class="col-sm-offset-5 col-sm-2">
-              <a class="btn btn-primary"
-                 th:href="@{/admin/error-rate/detail/}+${confusionMatrix.id}">See Detail</a>
-            </div>
-          </div>
-
-          <!--<div class="row">-->
-          <!--<div class="col-sm-offset-5 col-sm-2">-->
-          <!--<button class="btn btn-primary" data-toggle="collapse"-->
-          <!--th:attr="data-target='#'+${confusionMatrix.id}">-->
-          <!--See Detail-->
-          <!--</button>-->
-          <!--</div>-->
-          <!--</div>-->
-          <!--<div th:attr="id=${confusionMatrix.id}" class="collapse">-->
-          <!--<table class="table table-hover">-->
-          <!--<thead>-->
-          <!--<tr>-->
-          <!--<td>Id</td>-->
-          <!--<td>Actual</td>-->
-          <!--<td>Predicted</td>-->
-          <!--<td>Percentage</td>-->
-          <!--</tr>-->
-          <!--</thead>-->
-          <!--<tbody>-->
-          <!--<div th:each="detail : ${confusionMatrix.confusionMatrixDetails}">-->
-          <!--<tr>-->
-          <!--<td th:text="${detail.id}"></td>-->
-          <!--<td th:text="${detail.actual}"></td>-->
-          <!--<td th:text="${detail.predicted}"></td>-->
-          <!--<td th:text="${detail.percentage}"></td>-->
-          <!--</tr>-->
-          <!--</div>-->
-          <!--</tbody>-->
-          <!--</table>-->
-          <!--</div>-->
+            <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+            <!--</div>-->
+            <!--</tbody>-->
+            <!--</table>-->
 
         </div>
-      </div>
-
-      <!--<table class="table table-hover">-->
-      <!--<thead>-->
-      <!--<tr>-->
-      <!--<th></th>-->
-      <!--<th>True Positive</th>-->
-      <!--<th>True Negative</th>-->
-      <!--<th>False Positive</th>-->
-      <!--<th>False Negative</th>-->
-      <!--</tr>-->
-      <!--</thead>-->
-      <!--<tbody>-->
-      <!--<div th:each="errorRate : ${errorRates}">-->
-      <!--<tr>-->
-      <!--<td th:text="${errorRate.type}"></td>-->
-      <!--<td th:text="${errorRate.truePositive}"></td>-->
-      <!--<td th:text="${errorRate.trueNegative}"></td>-->
-      <!--<td th:text="${errorRate.falsePositive}"></td>-->
-      <!--<td th:text="${errorRate.falseNegative}"></td>-->
-      <!--</tr>-->
-      <!--&lt;!&ndash;<tr th:if="${#strings.contains(errorRate.type,'LAST')}">&ndash;&gt;-->
-      <!--&lt;!&ndash;&ndash;&gt;-->
-      <!--&lt;!&ndash;</tr>&ndash;&gt;-->
-      <!--&lt;!&ndash;<tr th:if="${#strings.contains(errorRate.type,'ACCUMULATIVE')}">&ndash;&gt;-->
-
-      <!--&lt;!&ndash;</tr>&ndash;&gt;-->
-      <!--</div>-->
-      <!--</tbody>-->
-      <!--</table>-->
-
     </div>
-  </div>
-  <hr/>
+    <hr/>
 
-  <h3 class="text-center"><i><u>Formula</u></i></h3>
-  <div class="row">
-    <span style="color: red">*</span>
-    <span>
+    <h3 class="text-center"><i><u>Formula</u></i></h3>
+    <div class="row">
+        <span style="color: red">*</span>
+        <span>
             <small>tp = True Positive</small>
         </span>
-  </div>
-  <div class="row">
-    <span style="color: red">*</span>
-    <span>
+    </div>
+    <div class="row">
+        <span style="color: red">*</span>
+        <span>
             <small>tn = True Negative</small>
         </span>
-  </div>
-  <div class="row">
-    <span style="color: red">*</span>
-    <span>
+    </div>
+    <div class="row">
+        <span style="color: red">*</span>
+        <span>
             <small>fp = False Positive</small>
         </span>
-  </div>
-  <div class="row">
-    <span style="color: red">*</span>
-    <span>
+    </div>
+    <div class="row">
+        <span style="color: red">*</span>
+        <span>
             <small>fn = False Negative</small>
         </span>
-  </div>
-
-
-  <!--FORMULA-->
-  <div class="row">
-    <!--Accuracy-->
-    <div class="col-sm-3">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          Accuracy
-        </div>
-        <div class="panel-body">
-          $$Accuracy = {tp + tn \over tp+tn+fn+fp}$$
-        </div>
-      </div>
     </div>
 
-    <!--Recall-->
-    <div class="col-sm-offset-1 col-sm-3">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          Recall
-        </div>
-        <div class="panel-body">
-          $$R = {tp \over tp + fn} $$
-        </div>
-      </div>
-    </div>
 
-    <!--Precision-->
-    <div class="col-sm-offset-1 col-sm-3">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          Precision
+    <!--FORMULA-->
+    <div class="row">
+        <!--Accuracy-->
+        <div class="col-sm-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Accuracy
+                </div>
+                <div class="panel-body">
+                    $$Accuracy = {tp + tn \over tp+tn+fn+fp}$$
+                </div>
+            </div>
         </div>
-        <div class="panel-body">
-          $$P = {tp \over tp + fp}$$
-        </div>
-      </div>
-    </div>
 
-    <!--F measure-->
-    <div class="col-sm-3">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          F Measure
+        <!--Recall-->
+        <div class="col-sm-offset-1 col-sm-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Recall
+                </div>
+                <div class="panel-body">
+                    $$R = {tp \over tp + fn} $$
+                </div>
+            </div>
         </div>
-        <div class="panel-body">
-          <span>$$ \alpha = {coefficient}$$</span>
-          <span>$$ \alpha = {2PR \over P + R}$$</span>
-          <span>$$F = {1 \over {\alpha{1 \over P}+(1-\alpha) {1 \over R} }}$$</span>
+
+        <!--Precision-->
+        <div class="col-sm-offset-1 col-sm-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Precision
+                </div>
+                <div class="panel-body">
+                    $$P = {tp \over tp + fp}$$
+                </div>
+            </div>
         </div>
-      </div>
+
+        <!--F measure-->
+        <div class="col-sm-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    F Measure
+                </div>
+                <div class="panel-body">
+                    <span>$$ \alpha = {coefficient}$$</span>
+                    <span>$$ \alpha = {2PR \over P + R}$$</span>
+                    <span>$$F = {1 \over {\alpha{1 \over P}+(1-\alpha) {1 \over R} }}$$</span>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </section>
 </body>
 </html>

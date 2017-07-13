@@ -1,168 +1,200 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
-  <title>Title</title>
-  <link th:src="'https://cdn.jsdelivr.net/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js'"/>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <title>Title</title>
+    <link th:src="'https://cdn.jsdelivr.net/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js'"/>
 </head>
 <body>
 <h2 th:fragment="header">
-  InputSet
-  <small> - Welcome to File Transporter between local and HDFS -</small>
+    InputSet
+    <small> - Welcome to File Transporter between local and HDFS -</small>
 </h2>
 <div class="content" th:fragment="content">
-  <div class="container">
+    <div class="container">
 
-    <div class="navbar">
-      <a th:href="@{/admin/input-set/both}" th:class="${#strings.contains(view,'both')} ? 'btn btn-default active' : 'btn btn-default'">Input File and Info</a>
-      <a th:href="@{/admin/input-set/inputonly}" th:class="${#strings.contains(view,'inputonly')} ? 'btn btn-default active' : 'btn btn-default'">Input File Only</a>
-      <a th:href="@{/admin/input-set/infoonly}" th:class="${#strings.contains(view,'infoonly')} ? 'btn btn-default active' : 'btn btn-default'">Change Info</a>
-    </div>
+        <div class="navbar">
+            <a th:href="@{/admin/input-set/both}"
+               th:class="${#strings.contains(view,'both')} ? 'btn btn-default active' : 'btn btn-default'">Input
+                File and Info</a>
+            <a th:href="@{/admin/input-set/inputonly}"
+               th:class="${#strings.contains(view,'inputonly')} ? 'btn btn-default active' : 'btn btn-default'">Input
+                File Only</a>
+            <a th:href="@{/admin/input-set/infoonly}"
+               th:class="${#strings.contains(view,'infoonly')} ? 'btn btn-default active' : 'btn btn-default'">Change
+                Info</a>
+        </div>
 
-    <form class="form-horizontal" method="post" enctype="multipart/form-data"
-          th:object="${inputSet}" th:action="@{/admin/input-set/inputonly}">
+        <div class="box box-solid" style="background-color: white">
+            <div class="box-body text-left">
+                <div class="container">
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data"
+                          th:object="${inputSet}" th:action="@{/admin/input-set/inputonly}">
 
 
-      <div class="row">
-        <div class="form-group">
-          <div class="col-sm-2">
-            <label>Input Directory In HDFS: </label>
-          </div>
-          <div class="col-sm-3">
-            <span class="form-control disabled" style="font-family: monospace, serif">/bayes/</span>
-          </div>
-          <div class="col-sm-2">
-            <span style="font-family: monospace, serif">
-              <!--<select class="form-control">-->
-              <!--<div th:each="dir : ${availableDirs}">-->
-              <!--<option value="${dir}" th:inline="text">[[${dir}]]</option>-->
-              <!--</div>-->
-              <!--</select>-->
-              <select id="ModelDirSelect" class="form-control" th:field="*{modelDirSelect}">
-                <option value="null">== Not Selected ==</option>
-                <div th:each="dir : ${availableDirs}">
-                  <option th:value="${dir}" th:inline="text">[[${dir}]]</option>
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-3" style="text-align: center">
+                                    <label style="font-size: small">Input Directory In
+                                        HDFS: </label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <span class="form-control disabled"
+                                          style="font-family: monospace, serif">/bayes/</span>
+                                </div>
+                                <div class="col-sm-2">
+                                    <span style="font-family: monospace, serif">
+                                      <!--<select class="form-control">-->
+                                        <!--<div th:each="dir : ${availableDirs}">-->
+                                        <!--<option value="${dir}" th:inline="text">[[${dir}]]</option>-->
+                                        <!--</div>-->
+                                        <!--</select>-->
+                                      <select id="ModelDirSelect" class="form-control"
+                                              th:field="*{modelDirSelect}">
+                                        <option value="null">== Not Selected ==</option>
+                                        <div th:each="dir : ${availableDirs}">
+                                          <option th:value="${dir}"
+                                                  th:inline="text">[[${dir}]]</option>
+                                        </div>
+                                      </select>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-offset-5 col-sm-2">
+                                    OR CREATE NEW DIRECTORY MODEL IN HDFS AND REMOVE DIRECTORY
+                                    RECURSIVELY IF
+                                    ALREADY EXIST
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-offset-5 col-sm-2">
+                                    <input id="ModelDir" class="form-control" type="text"
+                                           th:field="*{modelDir}"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-3" style="text-align: center">
+                                    <label style="font-size: small;">Input File To HDFS:</label>
+                                </div>
+
+                                <div class="col-sm-3">
+                                    <input multiple="multiple" id="FileInput" type="file"
+                                           class="form-control"
+                                           th:field="*{filesInput}"/>
+                                </div>
+                                <div class="col-sm-4">
+                                    <span class="form-control" style="font-family: monospace">
+                                      <span>/bayes/</span><span
+                                            id="ModelDirInputText">&lsaquo;ModelDir&rsaquo;</span><span>/input</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-3" style="text-align: center">
+                                    <label style="font-size: small">Input File Info To HDFS:</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input id="FileInfo" type="file" class="form-control"
+                                           onchange="FileInfoSetOnChange(this)"
+                                           th:field="*{filesInfo}"/>
+                                </div>
+                                <div class="col-sm-4">
+                                    <span class="form-control"
+                                          style="font-family: monospace"><span>/bayes/</span><span
+                                            id="ModelDirInfoText">&lsaquo;ModelDir&rsaquo;</span><span>/info</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-3" style="text-align: center">
+                                    <label style="font-size: small">Data Training : Data
+                                        Testing</label>
+                                </div>
+                                <div class="col-sm-1">
+                                    <input id="PercentageTrain" class="form-control" type="number"
+                                           th:field="*{percentage}"/>
+                                </div>
+                                <div class="col-sm-1 text-center">
+                                    <span class="form-control">:</span>
+                                </div>
+                                <div class="col-sm-1">
+                                    <span id="PercentageTest" class="form-control"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-offset-5 col-sm-2">
+                                    <button type="submit" class="btn btn-success">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--<input type="date" onchange="asd(this)" />-->
+
+                    </form>
+
+                    <br/>
+                    <br/>
                 </div>
-              </select>
-            </span>
-          </div>
+            </div>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="form-group">
-          <div class="col-sm-offset-5 col-sm-2">
-            OR CREATE NEW DIRECTORY MODEL IN HDFS AND REMOVE DIRECTORY RECURSIVELY IF ALREADY EXIST
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group">
-          <div class="col-sm-offset-5 col-sm-2">
-            <input id="ModelDir" class="form-control" type="text"
-                   th:field="*{modelDir}"/>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Input File To HDFS:</label>
-          <div class="col-sm-3">
-            <input multiple="multiple" id="FileInput" type="file" class="form-control"
-                   th:field="*{filesInput}"/>
-          </div>
-          <div class="col-sm-4">
-            <span class="form-control" style="font-family: monospace">
-              <span>/bayes/</span><span
-                id="ModelDirInputText">&lsaquo;ModelDir&rsaquo;</span><span>/input</span>
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Info InfoFile To HDFS:</label>
-          <div class="col-sm-3">
-            <input id="FileInfo" type="file" class="form-control"
-                   onchange="FileInfoSetOnChange(this)" th:field="*{filesInfo}"/>
-          </div>
-          <div class="col-sm-4">
-            <span class="form-control"
-                  style="font-family: monospace"><span>/bayes/</span><span
-                id="ModelDirInfoText">&lsaquo;ModelDir&rsaquo;</span><span>/info</span></span>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Data Training : Data Testing</label>
-          <div class="col-sm-1">
-            <input id="PercentageTrain" class="form-control" type="number"
-                   th:field="*{percentage}"/>
-          </div>
-          <div class="col-sm-1 text-center">
-            <span class="form-control">:</span>
-          </div>
-          <div class="col-sm-1">
-            <span id="PercentageTest" class="form-control"></span>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group">
-          <div class="col-sm-offset-5 col-sm-2">
-            <button type="submit" class="btn btn-success">Submit</button>
-          </div>
-        </div>
-      </div>
-
-      <!--<input type="date" onchange="asd(this)" />-->
-
-    </form>
-  </div>
+    </div>
 </div>
 <script type="application/javascript" th:fragment="custom_javascript"
         th:inline="javascript">
-  /*<![CDATA[*/
+    /*<![CDATA[*/
 
-//  function asd(date){
-//    console.log(date.value);
-//  }
+    //  function asd(date){
+    //    console.log(date.value);
+    //  }
 
-  $('#PercentageTrain').on('input', function () {
-    var percTest = 100 - this.value;
-    document.getElementById("PercentageTest").innerHTML = percTest;
-  });
+    $('#PercentageTrain').on('input', function () {
+        var percTest = 100 - this.value;
+        document.getElementById("PercentageTest").innerHTML = percTest;
+    });
 
-  $('#ModelDir').on('input', function () {
-    // Your code here
-    var modelDirSelect = document.getElementById("ModelDirSelect");
-    var value = modelDirSelect.options[modelDirSelect.selectedIndex].value;
+    $('#ModelDir').on('input', function () {
+        // Your code here
+        var modelDirSelect = document.getElementById("ModelDirSelect");
+        var value = modelDirSelect.options[modelDirSelect.selectedIndex].value;
 //    console.log("value: ", value)
-    if (value == "null") {
-      document.getElementById("ModelDirInfoText").innerHTML = this.value;
-      document.getElementById("ModelDirInputText").innerHTML = this.value;
-    }
-  });
+        if (value == "null") {
+            document.getElementById("ModelDirInfoText").innerHTML = this.value;
+            document.getElementById("ModelDirInputText").innerHTML = this.value;
+        }
+    });
 
-  $('#ModelDirSelect').on('input', function () {
-    if (this.value == "null") {
-      var realVal = document.getElementById("ModelDir").value;
+    $('#ModelDirSelect').on('input', function () {
+        if (this.value == "null") {
+            var realVal = document.getElementById("ModelDir").value;
 //      console.log("realVal: ", realVal);
-      document.getElementById("ModelDirInfoText").innerHTML = realVal;
-      document.getElementById("ModelDirInputText").innerHTML = realVal;
-    } else {
-      document.getElementById("ModelDirInfoText").innerHTML = this.value;
-      document.getElementById("ModelDirInputText").innerHTML = this.value;
-    }
-  });
+            document.getElementById("ModelDirInfoText").innerHTML = realVal;
+            document.getElementById("ModelDirInputText").innerHTML = realVal;
+        } else {
+            document.getElementById("ModelDirInfoText").innerHTML = this.value;
+            document.getElementById("ModelDirInputText").innerHTML = this.value;
+        }
+    });
 
-  /*]]>*/
+    /*]]>*/
 </script>
 </body>
 </html>

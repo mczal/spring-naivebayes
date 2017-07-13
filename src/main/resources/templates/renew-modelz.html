@@ -1,101 +1,132 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
-  <title>Title</title>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <title>Title</title>
 </head>
 <body>
 <h2 th:fragment="header">
-  Renew Naive Bayes Classifier's Model
+    Renew Naive Bayes Classifier's Model
 </h2>
 <div class="content" th:fragment="content">
 
-  <div class="row">
-    <h4>Upload Model From Local</h4>
-    <form class="form-horizontal" method="post" th:object="${modelLocal}"
-          th:action="@{/admin/renew-model-local}" enctype="multipart/form-data">
+    <div class="box box-solid" style="background-color: white">
+        <div class="box-body text-left">
+            <div class="container">
+                <div class="row">
+                    <h4>Upload Model From Local</h4>
+                    <br/>
+                    <br/>
+                    <form class="form-horizontal" method="post" th:object="${modelLocal}"
+                          th:action="@{/admin/renew-model-local}" enctype="multipart/form-data">
 
-      <!--<div class="row">-->
-      <div class="form-group"
-           th:class="${#fields.hasErrors('files')} ? 'form-group has-error' : 'form-group'">
-        <label class="col-sm-offset-1 col-sm-2 control-label">Model File From Local:</label>
-        <div class="col-sm-5">
-          <input type="file" class="form-control" th:field="*{files}"/>
-          <span class="help-block">
-                    <ul>
-                        <li th:each="err : ${#fields.errors('files')}"
-                            th:text="${err}"/>
-                    </ul>
-                </span>
+                        <div class="row">
+                            <div class="form-group"
+                                 th:class="${#fields.hasErrors('files')} ? 'form-group has-error' : 'form-group'">
+                                <div class="col-sm-offset-1 col-sm-3" style="text-align: center">
+                                    <label style="font-size: small">Model File From Local:</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="file" class="form-control" th:field="*{files}"/>
+                                    <span class="help-block">
+                                        <ul>
+                                            <li th:each="err : ${#fields.errors('files')}"
+                                                th:text="${err}"/>
+                                        </ul>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-3 col-sm-offset-5">
+                                    <button type="submit" class="btn btn-success">Submit
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--<div class="row">-->
+                        <!--<div class="form-group"-->
+                        <!--th:class="${#fields.hasErrors('user')} ? 'form-group has-error' : 'form-group'">-->
+                        <!--<label class="col-sm-2 control-label">User:</label>-->
+                        <!--<div class="col-sm-6">-->
+                        <!--&lt;!&ndash;<input type="text" class="form-control" th:field="*{user.username}"/>&ndash;&gt;-->
+                        <!--<span class="form-control" disabled="disabled"-->
+                        <!--th:text="${user.username} + ' / ' + ${user.email}"-->
+                        <!--style="text-align:center;"/>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                    </form>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <hr/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <h4>Upload Model From HDFS (Hadoop Distributed File System) NameSpace</h4>
+                    <br/>
+                    <br/>
+                    <form class="form-horizontal" method="post" th:object="${modelHdfs}"
+                          th:action="@{'/admin/renew-model-hdfs'}" enctype="multipart/form-data">
+
+                        <div class="row">
+                            <div class="form-group"
+                                 th:class="${#fields.hasErrors('modelHdfs')} ? 'form-group has-error' : 'form-group'">
+                                <div class="col-sm-offset-1 col-sm-3" style="text-align: center">
+                                    <label style="font-size: small">Model File From HDFS:</label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <!--<input value="/bayes/" class="form-control" type="text" th:field="*{modelHdfs}"/>-->
+                                    <select id="ModelDirSelect" class="form-control"
+                                            th:field="*{modelHdfs}">
+                                        <option value="null">== Not Selected ==</option>
+                                        <div th:each="dir : ${availableDirs}">
+                                            <option th:value="${dir}" th:inline="text">
+                                                /bayes/[[${dir}]]
+                                            </option>
+                                        </div>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-3 col-sm-offset-5">
+                                    <button type="submit" class="btn btn-success">Submit
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br/>
+                        <br/>
+
+                        <!--<div class="row">-->
+                        <!--<div class="form-group"-->
+                        <!--th:class="${#fields.hasErrors('user')} ? 'form-group has-error' : 'form-group'">-->
+                        <!--<label class="col-sm-2 control-label">User:</label>-->
+                        <!--<div class="col-sm-6">-->
+                        <!--&lt;!&ndash;<input type="text" class="form-control" th:field="*{user.username}"/>&ndash;&gt;-->
+                        <!--<span class="form-control" disabled="disabled"-->
+                        <!--th:text="${user.username} + ' / ' + ${user.email}"-->
+                        <!--style="text-align:center;"/>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                    </form>
+                </div>
+            </div>
         </div>
-      </div>
-      <!--</div>-->
+    </div>
 
-      <div class="row">
-        <div class="form-group">
-          <div class="col-sm-3 col-sm-offset-4">
-            <button type="submit" class="btn btn-outline-success">Submit</button>
-          </div>
-        </div>
-      </div>
 
-      <!--<div class="row">-->
-      <!--<div class="form-group"-->
-      <!--th:class="${#fields.hasErrors('user')} ? 'form-group has-error' : 'form-group'">-->
-      <!--<label class="col-sm-2 control-label">User:</label>-->
-      <!--<div class="col-sm-6">-->
-      <!--&lt;!&ndash;<input type="text" class="form-control" th:field="*{user.username}"/>&ndash;&gt;-->
-      <!--<span class="form-control" disabled="disabled"-->
-      <!--th:text="${user.username} + ' / ' + ${user.email}"-->
-      <!--style="text-align:center;"/>-->
-      <!--</div>-->
-      <!--</div>-->
-      <!--</div>-->
-    </form>
-  </div>
-  <div class="row">
-    <h4>Upload Model From HDFS (Hadoop Distributed File System) NameSpace</h4>
-    <form class="form-horizontal" method="post" th:object="${modelHdfs}"
-          th:action="@{'/admin/renew-model-hdfs'}" enctype="multipart/form-data">
-
-      <div class="row">
-        <div class="form-group"
-             th:class="${#fields.hasErrors('modelHdfs')} ? 'form-group has-error' : 'form-group'">
-          <label class="col-sm-offset-1 col-sm-2 control-label">Model File From HDFS:</label>
-          <div class="col-sm-5">
-            <!--<input value="/bayes/" class="form-control" type="text" th:field="*{modelHdfs}"/>-->
-            <select id="ModelDirSelect" class="form-control" th:field="*{modelHdfs}">
-              <option value="null">== Not Selected ==</option>
-              <div th:each="dir : ${availableDirs}">
-                <option th:value="${dir}" th:inline="text">/bayes/[[${dir}]]</option>
-              </div>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group">
-          <div class="col-sm-3 col-sm-offset-4">
-            <button type="submit" class="btn btn-outline-success">Submit</button>
-          </div>
-        </div>
-      </div>
-
-      <!--<div class="row">-->
-      <!--<div class="form-group"-->
-      <!--th:class="${#fields.hasErrors('user')} ? 'form-group has-error' : 'form-group'">-->
-      <!--<label class="col-sm-2 control-label">User:</label>-->
-      <!--<div class="col-sm-6">-->
-      <!--&lt;!&ndash;<input type="text" class="form-control" th:field="*{user.username}"/>&ndash;&gt;-->
-      <!--<span class="form-control" disabled="disabled"-->
-      <!--th:text="${user.username} + ' / ' + ${user.email}"-->
-      <!--style="text-align:center;"/>-->
-      <!--</div>-->
-      <!--</div>-->
-      <!--</div>-->
-    </form>
-  </div>
 </div>
 </body>
 </html>
