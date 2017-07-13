@@ -44,8 +44,16 @@ public class MapReduceController {
 
   private void createShellFile(int type, String model) throws Exception {
     if (type == TRAIN) {
-      String path =
-          "/Users/mczal/Projects/MapReduce-workspace/spring-naivebayes/src/main/resources/run-training.sh";
+      String mfsWorkspace = System.getenv("MFS_WORKSPACE");
+
+      String path = "";
+      if (mfsWorkspace == null || mfsWorkspace.equals("")) {
+        path =
+            "/Users/mczal/Projects/MapReduce-workspace/spring-naivebayes/src/main/resources/run-training.sh";
+      } else {
+        path = mfsWorkspace + "/run-training.sh";
+      }
+
       File file = new File(path);
       if (file.exists()) {
         file.delete();
@@ -78,9 +86,15 @@ public class MapReduceController {
       bw.close();
       Runtime.getRuntime().exec("chmod 775 " + path);
     } else if (type == TEST) {
+      String mfsWorkspace = System.getenv("MFS_WORKSPACE");
 
-      String path =
-          "/Users/mczal/Projects/MapReduce-workspace/spring-naivebayes/src/main/resources/run-testing.sh";
+      String path = "";
+      if (mfsWorkspace == null || mfsWorkspace.equals("")) {
+        path =
+            "/Users/mczal/Projects/MapReduce-workspace/spring-naivebayes/src/main/resources/run-testing.sh";
+      } else {
+        path = mfsWorkspace + "/run-testing.sh";
+      }
       File file = new File(path);
       if (file.exists()) {
         file.delete();
