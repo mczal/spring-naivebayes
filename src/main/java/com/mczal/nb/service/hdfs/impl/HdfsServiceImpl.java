@@ -34,7 +34,9 @@ public class HdfsServiceImpl implements HdfsService {
 
   private static final String HDFS_PATH = "/bayes/";
   private static final String HDFS_PATH_INFO = "/bayes/";
-  private static final String HDFS_AUTHORITY = "hdfs://localhost:9000";
+
+  @Value("${hdfs.authority}")
+  private String HDFS_AUTHORITY;
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
 

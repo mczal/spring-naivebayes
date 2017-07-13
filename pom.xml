@@ -6,7 +6,7 @@
 
   <groupId>com.mczal.nb</groupId>
   <artifactId>spring-naivebayes</artifactId>
-  <packaging>war</packaging>
+  <packaging>jar</packaging>
   <version>1.0</version>
   <name>spring-naivebayes</name>
   <description>Spring Naive Bayes Classifier</description>
@@ -22,6 +22,7 @@
     <!--<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
     <!--<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>-->
     <java.version>1.8</java.version>
+    <!--<tomcat.version>7.0.59</tomcat.version>-->
 
     <!--WebJars-->
     <bootstrap.version>3.3.7</bootstrap.version>
@@ -89,35 +90,36 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-      <!--<exclusions>-->
-      <!--<exclusion>-->
-      <!--<groupId>org.springframework.boot</groupId>-->
-      <!--<artifactId>spring-boot-starter-tomcat</artifactId>-->
-      <!--</exclusion>-->
-      <!--</exclusions>-->
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-tomcat</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
+    <!--<dependency>-->
+    <!--<groupId>org.springframework.boot</groupId>-->
+    <!--<artifactId>spring-boot-starter-tomcat</artifactId>-->
+    <!--<scope>provided</scope>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-tomcat</artifactId>
-      <!--<scope>provided</scope>-->
-    </dependency>
-    <!-- SHOULD BE REMOVED ? -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-devtools</artifactId>
-      <optional>true</optional>
+      <artifactId>spring-boot-starter-undertow</artifactId>
     </dependency>
     <!--<dependency>-->
     <!--<groupId>org.springframework.boot</groupId>-->
     <!--<artifactId>spring-boot-starter-jetty</artifactId>-->
     <!--</dependency>-->
 
-    <!-- Data Sources -->
-    <!--<dependency>-->
-    <!--<groupId>org.postgresql</groupId>-->
-    <!--<artifactId>postgresql</artifactId>-->
-    <!--<version>9.4-1206-jdbc42</version>-->
-    <!--</dependency>-->
+
+    <!-- SHOULD BE REMOVED ? -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
@@ -188,6 +190,7 @@
       </plugin>
     </plugins>
   </build>
+
 
   <!--<repositories>-->
   <!--<repository>-->

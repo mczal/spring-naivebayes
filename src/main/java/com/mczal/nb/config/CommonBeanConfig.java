@@ -1,17 +1,11 @@
 package com.mczal.nb.config;
 
-import java.io.IOException;
-import java.net.URI;
-import org.apache.hadoop.fs.FileSystem;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.context.embedded.undertow.UndertowBuilderCustomizer;
+import org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.domain.AuditorAware;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 /**
  * Created by Gl552 on 1/21/2017.
@@ -28,6 +22,27 @@ public class CommonBeanConfig {
   @Bean
   public org.apache.hadoop.conf.Configuration createConfig() {
     return new org.apache.hadoop.conf.Configuration();
+  }
+
+//  @Bean
+//  public TomcatEmbeddedServletContainerFactory embeddedServletContainerFactoryTomcat() {
+//    TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory(8080);
+//    return factory;
+//  }
+
+  @Bean
+  public UndertowEmbeddedServletContainerFactory embeddedServletContainerFactory() {
+    UndertowEmbeddedServletContainerFactory factory =
+        new UndertowEmbeddedServletContainerFactory();
+
+    factory.addBuilderCustomizers(new UndertowBuilderCustomizer() {
+      @Override
+      public void customize(io.undertow.Undertow.Builder builder) {
+        builder.addHttpListener(8080, "127.0.0.1");
+      }
+    });
+
+    return factory;
   }
 
 }
