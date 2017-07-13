@@ -171,8 +171,16 @@ public class MapReduceController {
       throw new Exception(bindingResult.getFieldError() + "");
     }
     this.createShellFile(TEST, testing.getModel());
-    String command =
-        "/Users/mczal/Projects/MapReduce-workspace/spring-naivebayes/src/main/resources/run-testing.sh";
+    String mfsWorkspace = System.getenv("MFS_WORKSPACE");
+
+    String command = "";
+    if (mfsWorkspace == null || mfsWorkspace.equals("")) {
+      command =
+          "/Users/mczal/Projects/MapReduce-workspace/spring-naivebayes/src/main/resources/run-testing.sh";
+    } else {
+      command = mfsWorkspace + "/run-testing.sh";
+    }
+
     //    String command = _RUN_TRAINING;
     //    String command = "ping google.com";
     this.executeCommand(command);
@@ -193,8 +201,15 @@ public class MapReduceController {
     }
 
     this.createShellFile(TRAIN, training.getModel());
-    String command =
-        "/Users/mczal/Projects/MapReduce-workspace/spring-naivebayes/src/main/resources/run-training.sh";
+
+    String mfsWorkspace = System.getenv("MFS_WORKSPACE");
+    String command = "";
+    if (mfsWorkspace == null || mfsWorkspace.equals((""))) {
+      command =
+          "/Users/mczal/Projects/MapReduce-workspace/spring-naivebayes/src/main/resources/run-training.sh";
+    } else {
+      command = mfsWorkspace + "/run-training.sh";
+    }
     //    String command = _RUN_TRAINING;
     //    String command = "ping google.com";
 
