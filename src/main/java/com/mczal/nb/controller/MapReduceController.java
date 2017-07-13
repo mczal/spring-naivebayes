@@ -33,9 +33,6 @@ public class MapReduceController {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  @Value("${hadoop.properties}")
-  private String _HADOOP_PROP;
-
   @Value("${hadoop.run.testing}")
   private String _RUN_TESTING;
 
@@ -73,7 +70,7 @@ public class MapReduceController {
       //      bw.write("/Users/Shared/hadoop/bin/hadoop jar "
       //          + "/Users/mczal/Projects/MapReduce-workspace/mapreduce-naivebayes-training/target/mapreduce-1.0-SNAPSHOT.jar "
       //          + "mczal.bayes.App " + model + System.lineSeparator());
-      bw.write(_RUN_TRAINING + " " + model + " " + _HADOOP_PROP + System.lineSeparator());
+      bw.write(_RUN_TRAINING + " " + model + System.lineSeparator());
 
       bw.newLine();
       bw.write("echo \"DONE\"");
@@ -108,7 +105,7 @@ public class MapReduceController {
       //      bw.write("/Users/Shared/hadoop/bin/hadoop jar "
       //          + "/Users/mczal/Projects/MapReduce-workspace/mapreduce-naivebayes-testing/target/testing-1.0-SNAPSHOT.jar "
       //          + "App " + model + System.lineSeparator());
-      bw.write(_RUN_TESTING + " " + model + " " + _HADOOP_PROP + System.lineSeparator());
+      bw.write(_RUN_TESTING + " " + model + System.lineSeparator());
       bw.newLine();
       bw.write("echo \"DONE\"");
       bw.flush();

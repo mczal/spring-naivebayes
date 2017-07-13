@@ -1,7 +1,5 @@
 package com.mczal.nb.config;
 
-import org.springframework.boot.context.embedded.undertow.UndertowBuilderCustomizer;
-import org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -15,7 +13,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaAuditing
 public class CommonBeanConfig {
 
-//  FileSystem hdfsFileSystem = FileSystem.get(new URI(HDFS_AUTHORITY), conf);
+  //  FileSystem hdfsFileSystem = FileSystem.get(new URI(HDFS_AUTHORITY), conf);
 
   private static final String HDFS_AUTHORITY = "HDFS_AUTHORITY";
 
@@ -24,25 +22,25 @@ public class CommonBeanConfig {
     return new org.apache.hadoop.conf.Configuration();
   }
 
-//  @Bean
-//  public TomcatEmbeddedServletContainerFactory embeddedServletContainerFactoryTomcat() {
-//    TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory(8080);
-//    return factory;
-//  }
+  //  @Bean
+  //  public TomcatEmbeddedServletContainerFactory embeddedServletContainerFactoryTomcat() {
+  //    TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory(8080);
+  //    return factory;
+  //  }
 
-  @Bean
-  public UndertowEmbeddedServletContainerFactory embeddedServletContainerFactory() {
-    UndertowEmbeddedServletContainerFactory factory =
-        new UndertowEmbeddedServletContainerFactory();
-
-    factory.addBuilderCustomizers(new UndertowBuilderCustomizer() {
-      @Override
-      public void customize(io.undertow.Undertow.Builder builder) {
-        builder.addHttpListener(8080, "127.0.0.1");
-      }
-    });
-
-    return factory;
-  }
+  //  @Bean
+  //  public UndertowEmbeddedServletContainerFactory embeddedServletContainerFactory() {
+  //    UndertowEmbeddedServletContainerFactory factory =
+  //        new UndertowEmbeddedServletContainerFactory();
+  //
+  //    factory.addBuilderCustomizers(new UndertowBuilderCustomizer() {
+  //      @Override
+  //      public void customize(io.undertow.Undertow.Builder builder) {
+  //        builder.addHttpListener(8080, "127.0.0.1");
+  //      }
+  //    });
+  //
+  //    return factory;
+  //  }
 
 }
