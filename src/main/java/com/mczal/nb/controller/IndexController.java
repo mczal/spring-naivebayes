@@ -21,7 +21,7 @@ public class IndexController {
   @Value("${hadoop.help.guides.pdf}")
   private String helpGuidesPdf;
 
-  @RequestMapping(value = "/guides",
+  @RequestMapping(value = "/guides.pdf",
       method = RequestMethod.GET)
   public ResponseEntity<byte[]> getPDF1() throws Exception {
 

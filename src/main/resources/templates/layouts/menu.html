@@ -74,12 +74,12 @@
 
     <li class="">
         <!--@{/admin/error-rate}-->
-        <a th:href="@{/guides}" class="detailed">
+        <a th:href="@{/guides.pdf}" class="detailed">
             <span class="title">Help</span>
             <span class="details">Usage Guides</span>
         </a>
         <span
-                th:class="${#strings.contains(view,'error-rate')} ? 'bg-success icon-thumbnail' : 'icon-thumbnail'"><i
+                th:class="${#strings.contains(view,'guides')} ? 'bg-success icon-thumbnail' : 'icon-thumbnail'"><i
                 class="glyphicon glyphicon-info-sign"></i></span>
     </li>
     <!--<li class="">-->
